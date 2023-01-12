@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Aaron Bauer" />
+  <meta name="dcterms.date" content="2022-04-19" />
+  <title>Lab 2: Bomb Lab</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="lab-style.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
+  <link rel="manifest" href="./site.webmanifest">
+
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Lab 2: Bomb Lab</h1>
+<p class="author">Aaron Bauer</p>
+<p class="date">April 19, 2022</p>
+</header>
+<div class="wrapper">
+<h1 id="lab-2-defusing-a-binary-bomb1">Lab 2: Defusing a Binary Bomb<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></h1>
+<ul>
+<li><strong>Assigned:</strong> Wednesday, April 20</li>
+<li><strong>Check-in Post:</strong> Before 9pm Monday, April 25 (<a href="https://moodle.carleton.edu/mod/forum/view.php?id=743571">check-in forum</a>)</li>
+<li><strong>Due:</strong> 9pm Friday, April 29</li>
+<li><strong>Collaboration:</strong> This is an individual assignment</li>
+<li><strong>Handout:</strong></li>
+<li><strong>Submit:</strong> Upload <code>descriptions.txt</code> to <a href="https://moodle.carleton.edu/mod/assign/view.php?id=743559">Lab 2</a> (if applicable, see <a href="#step-2-defuse-your-bomb">Step 2: Defuse Your Bomb</a>)</li>
+<li><strong>References:</strong>
+<ul>
+<li><a href="../reference-sheet.html">208 Reference Sheet</a></li>
+<li><a href="../notes/assembly-intro.html">Introduction to Assembly</a></li>
+<li><a href="../notes/assembly-arithmetic.html">Assembly and Arithmetic</a></li>
+<li><a href="../notes/assembly-conditionals.html">Assembly and Conditionals</a></li>
+<li><a href="../notes/assembly-loops.html">Assembly and Loops</a></li>
+<li><a href="../notes/data-structures-arrays.html">Assembly and Arrays</a></li>
+<li><a href="http://beej.us/guide/bggdb/"><code>gdb</code> Tutorial</a></li>
+<li><a href="https://courses.cs.washington.edu/courses/cse351/videos/tutorials/gdb.mp4">Introductory Video (from University of Washington)</a></li>
+<li><a href="http://csapp.cs.cmu.edu/3e/docs/gdbnotes-x86-64.txt"><code>gdb</code> Cheat Sheet</a></li>
+</ul></li>
+</ul>
+<h2 id="introduction">Introduction</h2>
+<p>The nefarious <em>Mr. Dr. The Professor</em> has planted a slew of <em>binary bombs</em> on our class server. A binary bomb is a program that consists of a sequence of phases. Each phase expects you to input a particular string. If you type the correct string, then the phase is <em>defused</em> and the bomb proceeds to the next phase. Otherwise, the bomb <em>explodes</em> by printing <code>"BOOM!!!"</code> and then terminating. The bomb is defused when every phase has been defused.</p>
+<p>There are too many bombs for us to deal with, so we are giving each student a bomb to defuse. Your mission, which you have no choice but to accept, is to defuse your bomb before the due date. Good luck, and welcome to the bomb squad!</p>
+<h2 id="step-1-get-your-bomb">Step 1: Get Your Bomb</h2>
+<p>You can obtain your bomb by pointing your web browser at:</p>
+<div class="sourceCode">
+<pre class="sourcecode"><code>    http://awb66333.mathcs.carleton.edu:15213</code></pre>
+</div>
+<p>The web page will display a binary bomb request form for you to fill in. Enter your Carleton user name and email address and hit the Submit button. The server will build your bomb and return it to your browser in a <code>tar</code> file called <code>bombK.tar</code>, where <code>K</code> is the unique number of your bomb.</p>
+<p>Save the <code>bombK.tar</code> file. If you are working on <code>mantis</code>, connect via VS Code, open a folder, and drag the file over to the list of files to upload it. Then run the terminal command: <code>tar -xvf bombK.tar</code> from the directory containing the tar file. This will create a directory called <code>bombK</code> with the following files:</p>
+<ul>
+<li><code>README</code>: Identifies the bomb and its owner.</li>
+<li><code>bomb</code>: The executable binary bomb. You must be connected to the internet to run this bomb. It will automatically submit your progress.</li>
+<li><code>bomb-quiet</code>: An offline version of the executable binary bomb. You can work on this one without an internet connection. You just need to run <code>bomb</code> once while connected to have your progress recorded.</li>
+<li><code>bomb.c</code>: Source file with the bomb’s main routine and a friendly greeting from Mr. Dr. The Professor.</li>
+<li><code>descriptions.txt</code>: File in which you describe the x86 assembly code</li>
+<li><code>defuse.txt</code>: File in which you record defusing inputs, one line per phase</li>
+</ul>
+<p>If for some reason you request multiple bombs, this is not a problem. Choose one bomb to work on and delete the rest.</p>
+<h2 id="step-2-defuse-your-bomb">Step 2: Defuse Your Bomb</h2>
+<p>Your job for this lab is to defuse your bomb.</p>
+<p><strong>You must do the assignment on Linux</strong>. There is a rumor that Mr. Dr. The Professor really is evil, and has built tamper-proofing devices into the bomb.</p>
+<p>You can use many tools to help you defuse your bomb. Please look at the <a href="#advice">Advice</a> section for some tips and ideas. The best way is to use a debugger to step through the disassembled binary.</p>
+<p>The first three phases are worth 13 points each. The next three are worth 6 points each. The check-in post is worth 3 points, as usual, for a maximum score of 60 points. You can also earn points by writing descriptions of what the assembly code is doing for phases <em>beyond phase 1</em>. Specifically, in the provided <code>descriptions.txt</code> file, write a succinct paragraph or two for each phase, describing:</p>
+<ul>
+<li>What the phase is computing with your input at a high level of abstraction.</li>
+<li>Some key features of the assembly code that correspond to the high-level computation.</li>
+</ul>
+<p>Describe at a high level as if you are summarizing whatever C code compiled to this assembly/machine code. (Feel free to write C to describe what is computed.) Do mention a couple assembly details that were particular aha! moments or critical aspects that alerted you to this high-level structure, but do not give a line-by-line run-down of the assembly code. Keep notes along the way so you do not need to repeat the reverse engineering process to remember how it worked!</p>
+<p>Each description you submit can earn up to 6 points. This means you can earn the full 60 points for the lab by defusing the first four phases and writing good descriptions of two of them (again, not including phase 1). There are essentially two approaches to the lab (you can go with either one, or something in between):</p>
+<ul>
+<li>For each phase, concentrate on deciphering just enough of what’s going to provide a defusing input, and then move on. You will improve your ability to pinpoint what code actually matters and what code you can ignore in addition to your understanding of assembly. Your goal is to defuse all the phases.</li>
+<li>Work through each phase carefully to fully understand what is going on, and write a description of your findings. You will greatly improve your understanding of assembly. Your goal is to defuse the first four phases and thoroughly describe two of them.</li>
+</ul>
+<p>Although phases get progressively harder to defuse, the expertise you gain as you move from phase to phase should offset this difficulty. However, the later phases will likely take some time to work through, so please don’t wait until the last minute to start.</p>
+The bomb ignores blank input lines. If you run your bomb with a command line argument, for example,
+<div class="sourceCode">
+<pre class="sourcecode"><code>    ./bomb defuse.txt</code></pre>
+</div>
+<p>then it will read the input lines from <code>defuse.txt</code> until it reaches EOF (end of file), and then switch over to reading from the command line. In a moment of weakness, Mr. Dr. The Professor added this feature so you don’t have to keep retyping the solutions to phases you have already defused.</p>
+<p>To avoid accidentally detonating the bomb, you will need to learn how to single-step through the assembly code and how to set breakpoints. You will also need to learn how to inspect both the registers and the memory states. One of the nice side-effects of doing the lab is that you will get very good at using a debugger. This is a crucial skill that will pay big dividends dealing with buggy software in the future.</p>
+<h3 id="advice">Advice</h3>
+<p>There are many ways of defusing your bomb. You can examine it in great detail without ever running the program, and figure out exactly what it does. This is a useful technique, but it not always easy to do. You can also run it under a debugger, watch what it does step by step, and use this information to defuse it. This is probably the fastest way of defusing it.</p>
+<p>Some general advice:</p>
+<ul>
+<li>Mr. Dr. The Professor may be evil, but he isn’t cruel. You may assume that functions do what their name implies (<code>phase_1()</code> is most likely the first phase. <code>printf()</code> is just <code>printf()</code>. A function called <code>strings_not_equal</code> probably takes two strings and returns whether they are not equal. If there is an <code>explode_bomb()</code> function, it would probably help to set a breakpoint there!)</li>
+<li>Most cryptic function calls you’ll see (e.g. <code>callq ... &lt;_exit@plt&gt;</code> and <code>callq ... &lt;__isoc99_sscanf@plt&gt;</code> would be calls to <code>exit()</code> and <code>sscanf()</code>, respectively) are calls to C library functions. (You can safely ignore the <code>@plt</code> as that refers to dynamic linking.)</li>
+<li>Most phases use the C library function <code>sscanf</code> to parse the input string, so you will want to understand how this function works.</li>
+<li>Avoid going through the assembly for C library functions—looking up online documentation will be much easier path to understanding them!</li>
+</ul>
+<p>There are many tools which are designed to help you figure out both how programs work, and what is wrong when they don’t work. Here is a list of some of the tools you may find useful in analyzing your bomb, and hints on how to use them.</p>
+<h4 id="gdb"><code>gdb</code></h4>
+<p>The GNU debugger, this is a command line debugger tool available on virtually every Linux platform. You can trace through a program line by line, examine memory and registers, look at both the source code and assembly code (we are not giving you the source code for most of your bomb), set breakpoints, set memory watch points, and write scripts.</p>
+<p>The course web page has a handy <a href="http://cs.carleton.edu/faculty/awb/cs208/s22/#gdb-resources">list of resources</a> that you can use as a reference. The list of References at the top this writeup links to many of these as well.</p>
+<h4 id="objdump"><code>objdump</code></h4>
+<p><code>objdump -t bomb</code> will print out the bomb’s symbol table. The symbol table includes the names of all functions and global variables in the bomb, the names of all the functions the bomb calls, and their addresses. You may learn something by looking at the function names!</p>
+<p>Use <code>objdump -d bomb</code> to disassemble all of the code in the bomb. You can also just look at individual functions using <code>gdb</code>: <code>gdb -batch bomb -ex 'disas FUNCTION_NAME'</code>. Reading the assembler code can tell you how the bomb works.</p>
+<h4 id="strings"><code>strings</code></h4>
+<p><code>strings bomb</code> will display the printable strings in your bomb.</p>
+<h2 id="what-to-turn-in">What to Turn In</h2>
+<p>The bomb automatically sends in your progress as you work on it (as long as you are connected to the Internet). This means you will need to run your <code>bomb</code> with the defusing inputs you discover at least once. It’s perfectly fine to work on the lab offline (<code>bomb-quiet</code> is provided to enable this), you just need to defuse the <code>bomb</code> once where it can connect in order to have your solutions recorded. You can keep track of how you are doing by looking at the class progress board here:</p>
+<div class="sourceCode">
+<pre class="sourcecode"><code>    http://awb66333.mathcs.carleton.edu:15213/progress</code></pre>
+</div>
+<p>This web page is updated continuously to show the progress for each bomb.</p>
+<p>If you wish to submit descriptions of phases you have solved, upload your <code>descriptions.txt</code> to the Lab 2 assignment on Moodle. Otherwise, there is nothing you need to manually submit.</p>
+<section class="footnotes" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>This lab is adapted from the Bomb Lab developed for <em>Computer Systems: A Programmer’s Perspective</em> by <a href="http://www.cs.cmu.edu/~bryant">Randal E. Bryant</a> and <a href="http://www.cs.cmu.edu/~droh">David R. O’Hallaron</a>, Carnegie Mellon University, available <a href="http://csapp.cs.cmu.edu/3e/labs.html">here</a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</body>
+</html>

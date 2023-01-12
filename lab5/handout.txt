@@ -1,0 +1,2 @@
+handout for web proxy lab
+https://cs.carleton.edu/faculty/awb/cs208/s22/handouts/lab5.html

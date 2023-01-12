@@ -1,0 +1,828 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2022-06-03 Fri 17:23 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CS 208 reference sheet</title>
+<meta name="generator" content="Org mode" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="topics/notes-style.css" />
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2019 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">CS 208 reference sheet</h1>
+<p>
+
+<style>
+table colgroup col:nth-child(1) {
+    width: 20%;
+}
+body {
+    width: 1000px
+}
+table.cond colgroup:nth-child(1) col:nth-child(1) {
+    width: 1%;
+}
+table.cond colgroup:nth-child(1) col:nth-child(2) {
+    width: 3%;
+}
+table.cond colgroup:nth-child(1) col:nth-child(3) {
+    width: 20%;
+}
+table.ops colgroup col:nth-child(1) {
+    width: 30%;
+}
+</style>
+
+</p>
+
+
+<div class="figure">
+<p><img src="./bits-reference.png" alt="bits-reference.png" width="900px" style="margin: 0 100% 0 0" />
+</p>
+</div>
+
+<div id="outline-container-org510c4b5" class="outline-2">
+<h2 id="org510c4b5">Assembly Instructions</h2>
+<div class="outline-text-2" id="text-org510c4b5">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides" width="900px" style="font-size: 12pt">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left"><code>mov a, b</code></td>
+<td class="org-left">Copy from <code>a</code> to <code>b</code>.</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>movs a, b</code></td>
+<td class="org-left">Copy from <code>a</code> to be with sign extension. Needs <i>two</i> width specifiers.</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>movz a, b</code></td>
+<td class="org-left">Copy from <code>a</code> to be with zero extension. Needs <i>two</i> width specifiers.</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>lea a, b</code></td>
+<td class="org-left">Compute address and store in <code>b</code>. <i>Note</i>: the scaling parameter of memory operands can only be 1, 2, 4, or 8.</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>push src</code></td>
+<td class="org-left">Push src onto the stack and decrement stack pointer.</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>pop dst</code></td>
+<td class="org-left">Pop from the stack into dst and increment stack pointer.</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>call &lt;func&gt;</code></td>
+<td class="org-left">Push return address onto stack and jump to a procedure.</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>ret</code></td>
+<td class="org-left">Pop return address and jump there.</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>add a, b</code></td>
+<td class="org-left">Add <code>a</code> to <code>b</code> and store in <code>b</code> (and set condition codes).</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>sub a, b</code></td>
+<td class="org-left">Subtract <code>a</code> from <code>b</code> (compute <code>b - a</code>) and store in <code>b</code> (and set condition codes).</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>imul a, b</code></td>
+<td class="org-left">Multiply <code>a</code> and <code>b</code> and store in <code>b</code> (and set condition codes).</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>neg a</code></td>
+<td class="org-left">Compute <code>-a</code> according to 2's complement and store in <code>a</code> (and set condition codes).</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>and a, b</code></td>
+<td class="org-left">Bitwise AND of <code>a</code> and b, store in <code>b</code> (and set condition codes).</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>or a, b</code></td>
+<td class="org-left">Bitwise OR of <code>a</code> and b, store in <code>b</code> (and set condition codes).</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>xor a, b</code></td>
+<td class="org-left">Bitwise XOR of <code>a</code> and b, store in <code>b</code> (and set condition codes).</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>sar a, b</code></td>
+<td class="org-left">Shift value of <code>b</code> <i>right</i> (<i>arithmetic</i>) by <code>a</code> bits, store in <code>b</code> (and set condition codes).</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>shr a, b</code></td>
+<td class="org-left">Shift value of <code>b</code> <i>right</i> (<i>logical</i>) by <code>a</code> bits, store in <code>b</code> (and set condition codes).</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>shl a, b</code></td>
+<td class="org-left">Shift value of <code>b</code> <i>left</i> by <code>a</code> bits, store in <code>b</code> (and set condition codes).</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>sal a, b</code></td>
+<td class="org-left">Shift value of <code>b</code> <i>left</i> by <code>a</code> bits, store in <code>b</code> (and set condition codes).</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>cmp a, b</code></td>
+<td class="org-left">Compare <code>b</code> with <code>a</code> (compute <code>b - a</code>), set condition codes based on result (result is not stored).</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test a, b</code></td>
+<td class="org-left">Bitwise AND of <code>a</code> and <code>b</code>, set condition codes based on result (result is not stored).</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>jmp &lt;label&gt;</code></td>
+<td class="org-left">Unconditional jump to address.</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>jCOND &lt;label&gt;</code></td>
+<td class="org-left">Considtion jump based on condition codes .</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>setCOND a</code></td>
+<td class="org-left">Set byte <code>a</code> to 0 or 1 based on condition codes.</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+<div style="page-break-before: always">&nbsp;</div>
+</p>
+</div>
+</div>
+<div id="outline-container-orgfbf3619" class="outline-2">
+<h2 id="orgfbf3619">Operands</h2>
+<div class="outline-text-2" id="text-orgfbf3619">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides" width="1000px" style="font-size: 12pt" class="ops">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Form</th>
+<th scope="col" class="org-left">Value</th>
+<th scope="col" class="org-left">Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>$NUM</code></td>
+<td class="org-left">Literal value of <code>NUM</code></td>
+<td class="org-left">Immediate</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>%REG</code></td>
+<td class="org-left">Value stored in <code>REG</code></td>
+<td class="org-left">Register</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>NUM</code></td>
+<td class="org-left">Value stored at address <code>NUM</code></td>
+<td class="org-left">Absolute</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>(%REG)</code></td>
+<td class="org-left">Value stored at address in <code>REG</code></td>
+<td class="org-left">Indirect</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>NUM(%REG)</code></td>
+<td class="org-left">Value stored at address <code>REG + NUM</code></td>
+<td class="org-left">Base + displacement</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>(%REG_B, %REG_I)</code></td>
+<td class="org-left">Value stored at address <code>REG_B + REG_I</code></td>
+<td class="org-left">Indexed</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>NUM(%REG_B, %REG_I)</code></td>
+<td class="org-left">Value stored at address <code>REG_B + REG_I + NUM</code></td>
+<td class="org-left">Indexed</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>(, %REG, S)</code></td>
+<td class="org-left">Value stored at address <code>REG * S</code></td>
+<td class="org-left">Scaled indexed</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>NUM(, %REG, S)</code></td>
+<td class="org-left">Value stored at address <code>REG * S + NUM</code></td>
+<td class="org-left">Scaled indexed</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>(%REG_B, REG_I, S)</code></td>
+<td class="org-left">Value stored at address <code>REG_B + REG_I * S</code></td>
+<td class="org-left">Scaled indexed</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>NUM(%REG_B, REG_I, S)</code></td>
+<td class="org-left">Value stored at address <code>REG_B + REG_I * S + NUM</code></td>
+<td class="org-left">Scaled indexed</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-orgab17fd0" class="outline-2">
+<h2 id="orgab17fd0">Conditionals</h2>
+<div class="outline-text-2" id="text-orgab17fd0">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides" width="900px" style="font-size: 12pt" class="cond">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-right" />
+</colgroup>
+
+<colgroup>
+<col  class="org-center" />
+</colgroup>
+
+<colgroup>
+<col  class="org-center" />
+</colgroup>
+
+<colgroup>
+<col  class="org-center" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Instruction</th>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-right">&#xa0;</th>
+<th scope="col" class="org-center"><code>(op) s, d</code></th>
+<th scope="col" class="org-center"><code>test a, b</code></th>
+<th scope="col" class="org-center"><code>cmp a, b</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>je</code></td>
+<td class="org-left"><code>sete</code></td>
+<td class="org-right">"Equal"</td>
+<td class="org-center"><code>d (op) s == 0</code></td>
+<td class="org-center"><code>b &amp; a == 0</code></td>
+<td class="org-center"><code>b == a</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>jne</code></td>
+<td class="org-left"><code>setne</code></td>
+<td class="org-right">"Not equal"</td>
+<td class="org-center"><code>d (op) s != 0</code></td>
+<td class="org-center"><code>b &amp; a != 0</code></td>
+<td class="org-center"><code>b != a</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>js</code></td>
+<td class="org-left"><code>sets</code></td>
+<td class="org-right">"Sign" (negative)</td>
+<td class="org-center"><code>d (op) s &lt; 0</code></td>
+<td class="org-center"><code>b &amp; a &lt; 0</code></td>
+<td class="org-center"><code>b - a &lt; 0</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>jns</code></td>
+<td class="org-left"><code>setns</code></td>
+<td class="org-right">(non-negative)</td>
+<td class="org-center"><code>d (op) s &gt;= 0</code></td>
+<td class="org-center"><code>b &amp; a &gt;= 0</code></td>
+<td class="org-center"><code>b - a &gt;= 0</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>jg</code></td>
+<td class="org-left"><code>setg</code></td>
+<td class="org-right">"Greater"</td>
+<td class="org-center"><code>d (op) s &gt; 0</code></td>
+<td class="org-center"><code>b &amp; a &gt; 0</code></td>
+<td class="org-center"><code>b &gt; a</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>jge</code></td>
+<td class="org-left"><code>setge</code></td>
+<td class="org-right">"Greater or equal"</td>
+<td class="org-center"><code>d (op) s &gt;= 0</code></td>
+<td class="org-center"><code>b &amp; a &gt;= 0</code></td>
+<td class="org-center"><code>b &gt;= a</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>jl</code></td>
+<td class="org-left"><code>setl</code></td>
+<td class="org-right">"Less"</td>
+<td class="org-center"><code>d (op) s &lt; 0</code></td>
+<td class="org-center"><code>b &amp; a &lt; 0</code></td>
+<td class="org-center"><code>b &lt; a</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>jle</code></td>
+<td class="org-left"><code>setle</code></td>
+<td class="org-right">"Less or equal"</td>
+<td class="org-center"><code>d (op) s &lt;= 0</code></td>
+<td class="org-center"><code>b &amp; a &lt;= 0</code></td>
+<td class="org-center"><code>b &lt;= a</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>ja</code></td>
+<td class="org-left"><code>seta</code></td>
+<td class="org-right">"Above" (unsigned &gt;)</td>
+<td class="org-center"><code>d (op) s &gt; 0U</code></td>
+<td class="org-center"><code>b &amp; a &gt; 0U</code></td>
+<td class="org-center"><code>b - a &gt; 0U</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>jb</code></td>
+<td class="org-left"><code>setb</code></td>
+<td class="org-right">"Below" (unsigned &lt;)</td>
+<td class="org-center"><code>d (op) s &lt; 0U</code></td>
+<td class="org-center"><code>b &amp; a &lt; 0U</code></td>
+<td class="org-center"><code>b - a &lt; 0U</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-org4f8777a" class="outline-2">
+<h2 id="org4f8777a">Registers and Sizes</h2>
+<div class="outline-text-2" id="text-org4f8777a">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides" width="550px" style="font-size: 12pt; float: left">
+
+
+<colgroup>
+<col  class="org-center" />
+
+<col  class="org-center" />
+
+<col  class="org-center" />
+
+<col  class="org-center" />
+
+<col  class="org-center" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-center">Name</th>
+<th scope="col" class="org-center">Convention</th>
+<th scope="col" class="org-center">Lowest 4 bytes</th>
+<th scope="col" class="org-center">Lowest 2 bytes</th>
+<th scope="col" class="org-center">Lowest byte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-center"><code>%rax</code></td>
+<td class="org-center">Return value</td>
+<td class="org-center"><code>%eax</code></td>
+<td class="org-center"><code>%ax</code></td>
+<td class="org-center"><code>%al</code></td>
+</tr>
+
+<tr>
+<td class="org-center"><code>%rbx</code></td>
+<td class="org-center">&#xa0;</td>
+<td class="org-center"><code>%ebx</code></td>
+<td class="org-center"><code>%bx</code></td>
+<td class="org-center"><code>%bl</code></td>
+</tr>
+
+<tr>
+<td class="org-center"><code>%rcx</code></td>
+<td class="org-center">Argument #4</td>
+<td class="org-center"><code>%ecx</code></td>
+<td class="org-center"><code>%cx</code></td>
+<td class="org-center"><code>%cl</code></td>
+</tr>
+
+<tr>
+<td class="org-center"><code>%rdx</code></td>
+<td class="org-center">Argument #3</td>
+<td class="org-center"><code>%edx</code></td>
+<td class="org-center"><code>%dx</code></td>
+<td class="org-center"><code>%dl</code></td>
+</tr>
+
+<tr>
+<td class="org-center"><code>%rsi</code></td>
+<td class="org-center">Argument #2</td>
+<td class="org-center"><code>%esi</code></td>
+<td class="org-center"><code>%si</code></td>
+<td class="org-center"><code>%sil</code></td>
+</tr>
+
+<tr>
+<td class="org-center"><code>%rdi</code></td>
+<td class="org-center">Argument #1</td>
+<td class="org-center"><code>%edi</code></td>
+<td class="org-center"><code>%di</code></td>
+<td class="org-center"><code>%dil</code></td>
+</tr>
+
+<tr>
+<td class="org-center"><code>%rsp</code></td>
+<td class="org-center">Stack pointer</td>
+<td class="org-center"><code>%esp</code></td>
+<td class="org-center"><code>%sp</code></td>
+<td class="org-center"><code>%spl</code></td>
+</tr>
+
+<tr>
+<td class="org-center"><code>%rbp</code></td>
+<td class="org-center">&#xa0;</td>
+<td class="org-center"><code>%ebp</code></td>
+<td class="org-center"><code>%bp</code></td>
+<td class="org-center"><code>%bpl</code></td>
+</tr>
+
+<tr>
+<td class="org-center"><code>%r8</code></td>
+<td class="org-center">Argument #5</td>
+<td class="org-center"><code>%r8d</code></td>
+<td class="org-center"><code>%r8w</code></td>
+<td class="org-center"><code>%r8b</code></td>
+</tr>
+
+<tr>
+<td class="org-center"><code>%r9</code></td>
+<td class="org-center">Argument #6</td>
+<td class="org-center"><code>%r9d</code></td>
+<td class="org-center"><code>%r9w</code></td>
+<td class="org-center"><code>%r9b</code></td>
+</tr>
+
+<tr>
+<td class="org-center"><code>%r10</code></td>
+<td class="org-center">&#xa0;</td>
+<td class="org-center"><code>%r10d</code></td>
+<td class="org-center"><code>%r10w</code></td>
+<td class="org-center"><code>%r10b</code></td>
+</tr>
+
+<tr>
+<td class="org-center"><code>%r11</code></td>
+<td class="org-center">&#xa0;</td>
+<td class="org-center"><code>%r11d</code></td>
+<td class="org-center"><code>%r11w</code></td>
+<td class="org-center"><code>%r11b</code></td>
+</tr>
+
+<tr>
+<td class="org-center"><code>%r12</code></td>
+<td class="org-center">&#xa0;</td>
+<td class="org-center"><code>%r12d</code></td>
+<td class="org-center"><code>%r12w</code></td>
+<td class="org-center"><code>%r12b</code></td>
+</tr>
+
+<tr>
+<td class="org-center"><code>%r13</code></td>
+<td class="org-center">&#xa0;</td>
+<td class="org-center"><code>%r13d</code></td>
+<td class="org-center"><code>%r13w</code></td>
+<td class="org-center"><code>%r13b</code></td>
+</tr>
+
+<tr>
+<td class="org-center"><code>%r14</code></td>
+<td class="org-center">&#xa0;</td>
+<td class="org-center"><code>%r14d</code></td>
+<td class="org-center"><code>%r14w</code></td>
+<td class="org-center"><code>%r14b</code></td>
+</tr>
+
+<tr>
+<td class="org-center"><code>%r15</code></td>
+<td class="org-center">&#xa0;</td>
+<td class="org-center"><code>%r15d</code></td>
+<td class="org-center"><code>%r15w</code></td>
+<td class="org-center"><code>%r15b</code></td>
+</tr>
+</tbody>
+</table>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides" width="200px" style="font-size: 12pt; float: right">
+
+
+<colgroup>
+<col  class="org-center" />
+
+<col  class="org-center" />
+
+<col  class="org-center" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-center">C type</th>
+<th scope="col" class="org-center">x86-64 suffix</th>
+<th scope="col" class="org-center">Size in bytes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-center"><code>char</code></td>
+<td class="org-center"><code>b</code></td>
+<td class="org-center">1</td>
+</tr>
+
+<tr>
+<td class="org-center"><code>short</code></td>
+<td class="org-center"><code>w</code></td>
+<td class="org-center">2</td>
+</tr>
+
+<tr>
+<td class="org-center"><code>int</code></td>
+<td class="org-center"><code>l</code></td>
+<td class="org-center">4</td>
+</tr>
+
+<tr>
+<td class="org-center"><code>long</code></td>
+<td class="org-center"><code>q</code></td>
+<td class="org-center">8</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</body>
+</html>

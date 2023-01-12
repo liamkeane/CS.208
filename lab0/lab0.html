@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Aaron Bauer" />
+  <meta name="dcterms.date" content="2022-03-31" />
+  <title>Lab 0: Welcome to C</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        background-color: #fffcf5;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {  background-color: #fffcf5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ef2929; background-color: #fffcf5; } /* Alert */
+    code span.an { color: #8f5902; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #c4a000; background-color: #fffcf5; } /* Attribute */
+    code span.bn { color: #0000cf; background-color: #fffcf5; } /* BaseN */
+    code span.cf { color: #006fe0; background-color: #fffcf5; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #d0372d; background-color: #fffcf5; } /* Char */
+    code span.cn { color: #d0372d; background-color: #fffcf5; } /* Constant */
+    code span.co { color: #8d8d84; background-color: #fffcf5; } /* Comment */
+    code span.cv { color: #8d8d84; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #8d8d84; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Documentation */
+    code span.dt { color: #6434a3; background-color: #fffcf5; } /* DataType */
+    code span.dv { color: #0000cf; background-color: #fffcf5; } /* DecVal */
+    code span.er { color: #a40000; background-color: #fffcf5; font-weight: bold; } /* Error */
+    code span.ex { background-color: #fffcf5; } /* Extension */
+    code span.fl { color: #d0372d; background-color: #fffcf5; } /* Float */
+    code span.fu { color: #006699; background-color: #fffcf5; } /* Function */
+    code span.im { background-color: #fffcf5; } /* Import */
+    code span.in { color: #8f5902; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #0000ff; background-color: #fffcf5; font-weight: bold; } /* Keyword */
+    code span.op { color: #006fe0; background-color: #fffcf5; font-weight: bold; } /* Operator */
+    code span.ot { color: #8f5902; background-color: #fffcf5; } /* Other */
+    code span.pp { color: #808080; background-color: #fffcf5; font-style: italic; } /* Preprocessor */
+    code span.sc { color: #000000; background-color: #fffcf5; } /* SpecialChar */
+    code span.ss { color: #4e9a06; background-color: #fffcf5; } /* SpecialString */
+    code span.st { color: #008000; background-color: #fffcf5; } /* String */
+    code span.va { color: #ba36a5; background-color: #fffcf5; } /* Variable */
+    code span.vs { color: #4e9a06; background-color: #fffcf5; } /* VerbatimString */
+    code span.wa { color: #8f5902; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Warning */
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="lab-style.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
+  <link rel="manifest" href="./site.webmanifest">
+
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Lab 0: Welcome to C</h1>
+<p class="author">Aaron Bauer</p>
+<p class="date">March 31, 2022</p>
+</header>
+<!-- pandoc -s -c lab-style.css -H lab-header.html --highlight-style highlight-style.theme lab0.md -o lab0.html -->
+<div class="wrapper">
+<h1 id="lab-0-welcome-to-c1">Lab 0: Welcome to C<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></h1>
+<ul>
+<li><strong>Assigned:</strong> Friday, April 1</li>
+<li><strong>Check-in Post:</strong> Before 9pm Wednesday, April 6 (<a href="https://moodle.carleton.edu/mod/forum/view.php?id=743566">check-in forum</a>)</li>
+<li><strong>Due:</strong> 9pm Monday, April 11</li>
+<li><strong>Collaboration:</strong> This is an individual assignment</li>
+<li><strong>Handout:</strong> <a href="lab0-handout.tar">starter project</a></li>
+<li><strong>Submit:</strong> Upload <code>queue.c</code> to <a href="https://moodle.carleton.edu/mod/assign/view.php?id=743557">Lab 0</a></li>
+<li><strong>Reference:</strong>
+<ul>
+<li><a href="../notes/bits-bytes-cpointers.html">Bits &amp; Bytes</a> and 3/30 readings</li>
+<li><a href="../notes/c-data-mem.html">C Memory Management</a> and 4/1 readings</li>
+<li><a href="https://cplusplus.com/reference/cstring/">C library string functions</a></li>
+<li><a href="http://cslibrary.stanford.edu/101/EssentialC.pdf">Essential C</a></li>
+<li><a href="http://pythontutor.com/c.html#code=%23include%20%3Cstdlib.h%3E%0A%23include%20%3Cstring.h%3E%0A%0Atypedef%20struct%20node%20%7B%0A%20%20struct%20node%20*next%3B%0A%20%20char%20*value%3B%0A%7D%20Node%3B%0A%0Atypedef%20struct%20queue%20%7B%0A%20%20Node%20*head%3B%0A%7D%20Queue%3B%0A%0Avoid%20q_add%28Queue%20*q,%20char%20*s%29%20%7B%0A%20%20Node%20n%3B%0A%20%20n.next%20%3D%20NULL%3B%0A%20%20n.value%20%3D%20s%3B%0A%20%20if%20%28q-%3Ehead%29%20%7B%0A%20%20%20%20n.next%20%3D%20q-%3Ehead%3B%0A%20%20%7D%0A%20%20q-%3Ehead%20%3D%20%26n%3B%0A%7D%0A%0Avoid%20q_add2%28Queue%20*q,%20char%20*s%29%20%7B%0A%20%20Node%20*n%20%3D%20%28Node*%29%20malloc%28sizeof%28Node%29%29%3B%0A%20%20n-%3Enext%20%3D%20NULL%3B%0A%20%20n-%3Evalue%20%3D%20s%3B%0A%20%20if%20%28q-%3Ehead%29%20%7B%0A%20%20%20%20n-%3Enext%20%3D%20q-%3Ehead%3B%0A%20%20%7D%0A%20%20q-%3Ehead%20%3D%20n%3B%0A%7D%0A%0Avoid%20q_add3%28Queue%20*q,%20char%20*s%29%20%7B%0A%20%20Node%20*n%20%3D%20%28Node*%29%20malloc%28sizeof%28Node%29%29%3B%0A%20%20n-%3Enext%20%3D%20NULL%3B%0A%20%20n-%3Evalue%20%3D%20%28char*%29%20malloc%28strlen%28s%29%20%2B%201%29%3B%0A%20%20strncpy%28n-%3Evalue,%20s,%20strlen%28s%29%20%2B%201%29%3B%0A%20%20if%20%28q-%3Ehead%29%20%7B%0A%20%20%20%20n-%3Enext%20%3D%20q-%3Ehead%3B%0A%20%20%7D%0A%20%20q-%3Ehead%20%3D%20n%3B%0A%7D%0A%0Aint%20main%28%29%20%7B%0A%20%20Queue%20q%3B%0A%20%20q.head%20%3D%20NULL%3B%20%0A%20%20char%20*s%20%3D%20malloc%2830%29%3B%0A%20%20strcpy%28s,%20%22fungi%22%29%3B%0A%20%20q_add%28%26q,%20s%29%3B%20//%20change%20to%20q_add2%20or%20q_add3%0A%20%20strcpy%28s,%20%22balloon%22%29%3B%0A%20%20q_add%28%26q,%20s%29%3B%20//%20change%20to%20q_add2%20or%20q_add3%0A%7D&amp;curInstr=0&amp;mode=display&amp;origin=opt-frontend.js&amp;py=c&amp;rawInputLstJSON=%5B%5D">C Tutor Example</a></li>
+<li><a href="https://people.engr.ncsu.edu/efg/210/s99/Notes/LinkedList.1.html">Linked Lists – The Basics</a></li>
+<li><a href="https://medium.com/basecs/whats-a-linked-list-anyway-part-1-d8b7e6508b9d">What’s a Linked List, Anyway?</a></li>
+</ul></li>
+</ul>
+<div class="box alert_box">
+<div class="warning">
+Assignment Manifest
+</div>
+<p>Each CS 208 assignment starts with an <strong><em>assignment manifest</em></strong> describing <strong>Due</strong> dates, the <strong>Collaboration</strong> policy, starter code or other materials in the lab <strong>Handout</strong>, how to <strong>Submit</strong> your work, and a list of topics or other resources that may be helpful to <strong>Reference</strong>.</p>
+<p><em>(Orange boxes mark key information or warnings.)</em></p>
+</div>
+<div class="box alert_box">
+<div class="warning">
+Check-in Post
+</div>
+<p>For each lab in this course, you will be expected to make a check-in post on a Moodle forum by a certain date. These posts are intended to facilitate class-wide collaboration on the labs and incentivize you to start the lab early. <strong>Making an on-time check-in post will constitute 5% of the lab grade.</strong> Specifically, you should contribute at least one of the following:</p>
+<ul>
+<li>Something surprising or difficult that you’ve learned that you think would help others</li>
+<li>A point of confusion</li>
+<li>Something you’re stuck on</li>
+<li>A deeper question sparked by the lab</li>
+<li>A response to someone else’s post.</li>
+</ul>
+<p>You can find the lab 0 check-in forum here: <a href="https://moodle.carleton.edu/mod/forum/view.php?id=743566" class="uri">https://moodle.carleton.edu/mod/forum/view.php?id=743566</a></p>
+</div>
+<h2 id="introduction">Introduction</h2>
+<p>This lab will give you practice in the style of C programming you will need to be able to do proficiently, especially for the later assignments in the class. Specific skills include</p>
+<ul>
+<li>Explicit memory management, as required in C</li>
+<li>Creating and manipulating pointer-based data structures</li>
+<li>Working with strings</li>
+<li>Enhancing the performance of key operations by storing redundant information in data structures</li>
+<li>Implementing robust code that operates correctly with invalid arguments, including <code>NULL</code> pointers</li>
+</ul>
+<p>You will implement a double-ended queue (a <em>deque</em>), supporting both last-in, first-out (LIFO) and first-in-first-out (FIFO) queuing disciplines. The underlying data structure is a singly-linked list, enhanced to make some of the operations more efficient.</p>
+<p>This is an individual project. You can do this assignment on any machine you choose. The testing for your code will be done on the CS department mantis server. Before you begin, please take the time to review the course policy on academic honesty and collaboration at <a href="http://cs.carleton.edu/faculty/awb/cs208/s22\#academic-honesty" class="uri">http://cs.carleton.edu/faculty/awb/cs208/s22\#academic-honesty</a>.</p>
+<h2 id="logistics">Logistics</h2>
+Download the starter code for this lab from the course website: <a href="http://cs.carleton.edu/faculty/awb/cs208/s22/lab0-handout.tar" class="uri">http://cs.carleton.edu/faculty/awb/cs208/s22/lab0-handout.tar</a>. You can download the tar file to your current directory from the terminal by running
+<div class="sourceCode">
+<pre class="sourcecode"><code>wget http://cs.carleton.edu/faculty/awb/cs208/s22/handouts/lab0-handout.tar</code></pre>
+</div>
+Extract the starter files with
+<div class="sourceCode">
+<pre class="sourcecode"><code>tar xvf lab0-handout.tar</code></pre>
+</div>
+<p><strong>Read this writeup all the way through before diving straight into the code!</strong></p>
+<p>As the Academic Honesty Policy states, you should not search the web or ask others for solutions to the lab. That means that search queries such as “reversing a linked-list in C” are off limits. Searching for basic C functionality is encouraged (e.g., “allocating a struct in C”).</p>
+<h2 id="overview">Overview</h2>
+<p>The starter code contains many files—don’t be intimated! Almost all of them are for simulating and testing your queue implementation. The only ones you have to care about are <code>queue.c</code> and <code>queue.h</code></p>
+<p>The file <code>queue.h</code> contains declarations of the following structures (you should not need to modify these):</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* Linked list element */</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> node {</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> *value;</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">struct</span> node *next;</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>} Node;</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">/* Queue structure */</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> {</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    Node *head; <span class="co">/* Linked list of elements */</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    Node *tail;</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">long</span> size;</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>} Queue;</span></code></pre></div>
+<p>These are combined to implement a queue of strings, as illustrated below. The top-level representation of a queue is a structure of type <code>Queue</code>. In the starter code, this structure contains only a single field <code>head</code>, but you will want to add other fields. The queue contents are represented as a singly-linked list, with each element represented by a structure of type <code>Node</code>, having fields <code>value</code> and <code>next</code>, storing a pointer to a string and a pointer to the next list element, respectively. The final list element has its next pointer set to <code>NULL</code>.</p>
+<figure>
+<img src="fig1.png" width="800" alt="Linked-list implementation of a queue. Each list element has a value field, pointing to an array of characters (C’s representation of strings), and a next field pointing to the next list element. Characters are encoded according to the ASCII encoding (shown in hexadecimal.)" /><figcaption aria-hidden="true"><strong>Linked-list implementation of a queue.</strong> Each list element has a <code>value</code> field, pointing to an array of characters (C’s representation of strings), and a <code>next</code> field pointing to the next list element. Characters are encoded according to the ASCII encoding (shown in hexadecimal.)</figcaption>
+</figure>
+<p>A string is represented in C as an array of values of type <code>char</code>. On most machines, data type <code>char</code> is represented as a single byte. To store a string of length <span class="math inline"><em>n</em></span>, the array has <span class="math inline"><em>n</em> + 1</span> elements, with the first <span class="math inline"><em>n</em></span> storing the codes (typically ASCII<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> format) for the characters and the final one being set to <code>0x00</code>. The <code>value</code> field of the list element is a pointer to the array of characters. The figure indicates the representation of the list <code>["cab", "bead", "cab"]</code>, with characters <code>a-e</code> represented in hexadecimal as ASCII codes <code>61-65</code>. Observe how the two instances of the string <code>"cab"</code> are represented by separate arrays—each list element should have a separate copy of its string.</p>
+<p>In our C code, a queue is a pointer of type <code>Queue *</code>. We distinguish two special cases: a <em>NULL</em> queue is one for which the pointer has value <code>NULL</code>. An <em>empty</em> queue is one pointing to a valid structure, but the <code>head</code> field has value <code>NULL</code>. Your code will need to deal properly with both of these cases, as well as queues containing one or more elements.</p>
+<h2 id="implementation">Implementation</h2>
+<p>Your task is to modify the code in <code>queue.c</code> to fully implement the following functions. We recommend working on them in the order we’ve listed them here, testing after you complete each one.</p>
+<ul>
+<li><code>q_new</code>: Create a new, empty queue.</li>
+<li><code>q_free</code>: Free all storage used by a queue.</li>
+<li><code>q_insert_head</code>: Attempt to insert a new element at the head of the queue (LIFO behavior).</li>
+<li><code>q_remove_head</code>: Attempt to remove the element at the head of the queue.</li>
+<li><code>q_insert_tail</code>: Attempt to insert a new element at the tail of the queue (FIFO behavior).</li>
+<li><code>q_size</code>: Compute the number of elements in the queue.</li>
+<li><code>q_reverse</code>: Reorder the list so that the queue elements are reversed in order. This function should not allocate or free any list elements (either directly or via calls to other functions that allocate or free list elements.) Instead, it should rearrange the existing elements.</li>
+</ul>
+<p>More details can be found in the comments in these two files, including how to handle invalid operations (e.g., removing from an empty or <code>NULL</code> queue), and what side effects and return values the functions should have.</p>
+<p>For functions that provide strings as arguments, you must create and store a copy of the string by calling <code>malloc</code> to allocate space (remember to include space for the terminating character) and then copying from the source to the newly allocated space. You cannot assume any fixed upper bound on the length of a string—you must allocate space for each string based on its length.</p>
+<p><strong>When it comes time to free a list element, you must also free the space used by the string</strong>. The general rule to follow is that every call to <code>malloc</code> needs to be matched by a call to <code>free</code> elsewhere in your code. I expect <code>q_new</code>, <code>q_insert_head</code>, and <code>q_insert_tail</code> to contain calls to <code>malloc</code> and <code>q_free</code> and <code>q_remove_head</code> to contain calls to <code>free</code>.</p>
+<p>You will also need to use <code>malloc</code> to allocate space for new list nodes as they are inserted. Why do you need to <code>malloc</code> space for nodes and strings, instead of just declaring nodes as local variables and using the <code>char*</code> that’s passed into the function? Because when pointers go stale or get reused, we don’t want that to interfere with our queue. Take a look at the C Tutor example in the list of references to see this in action. There are three different versions of a <code>q_add</code> function: <code>q_add</code> doesn’t use <code>malloc</code> at all, <code>q_add2</code> uses <code>malloc</code> for the list node, and <code>q_add3</code> uses <code>malloc</code> for both the list node and the string. This code is also an example of how to use the C library string functions to copy a string.</p>
+<p>We require that your implementations of <code>q_insert_tail</code> and <code>q_size</code> operate in time <span class="math inline"><em>O</em>(1)</span>, i.e., that the operation will require only a fixed number of steps, regardless of the queue size. Make sure to use the <code>tail</code> and <code>size</code> fields of the queue to accomplish this.</p>
+<p>Your program will be tested on queues with over 1,000,000 elements. You will find that you cannot operate on such long lists using recursive functions, since that would require too much stack space. Instead, you need to use a loop to traverse the elements in a list.</p>
+<h2 id="testing">Testing</h2>
+<p>It will very useful to test your code incrementally, as you implement each function. The <code>traces</code> directory contains 14 trace files, with names of the form <code>trace-</code><em>k</em><code>-</code><em>cat</em><code>.txt</code>, where <em>k</em> is the trace number, and <em>cat</em> specifies the category of properties being tested. Each trace consists of a sequence of commands, similar to those shown above. They test different aspects of the correctness, robustness, and performance of your program. You can use these, your own trace files, and direct interactions with <code>qtest</code> to test and debug your program. Read the comment at the top of each trace file to see a description of what it tests.</p>
+<p>You can compile your code using the command:</p>
+<div class="sourceCode">
+<pre class="sourcecode"><code>make</code></pre>
+</div>
+<p>If there are no errors, the compiler will generate an executable program <code>qtest</code>, providing a command interface with which you can create, modify, and examine queues. Documentation on the available commands can be found by starting this program and running the help command:</p>
+<div class="sourceCode">
+<pre class="sourcecode"><code>./qtest
+cmd&gt;help</code></pre>
+</div>
+<p>The file <code>traces/trace-eg.cmd</code> illustrates an example command sequence. You can see the effect of these commands by operating <code>qtest</code> in batch mode:</p>
+<div class="sourceCode">
+<pre class="sourcecode"><code>./qtest -f traces/trace-eg.cmd</code></pre>
+</div>
+<p>With the starter code, you will see that many of these operations are not implemented properly.</p>
+<h3 id="segmentation-fault">Segmentation Fault</h3>
+<p>A hallmark of C programming is the ominous <em>segmentation fault</em>. This error crashes the program immediately, and provides no information as to the cause. Fortunately, <code>gdb</code> (the GNU debugger) can help us discover the line of code where the fault occurs and even which pointer dereference is responsible (seg faults are usually the result of dereferencing a null or invalid pointer). The <a href="http://cs.carleton.edu/faculty/awb/cs208/s22/#gdb-resources">course webpage</a> has a <code>gdb</code> tutorial and cheat sheet. <a href="https://asciinema.org/a/lpZ0hwecBTmQMKUaMkj6Cr4t1">Follow this link</a> to see demo of getting started with the lab and using <code>gdb</code> to diagnose a seg fault in the starter code. Note how the message in <code>gdb</code></p>
+<div class="sourceCode">
+<pre class="sourcecode"><code>Program received signal SIGSEGV, Segmentation fault.
+0x0000555555559370 in q_insert_head (q=0x0, s=0x555555761b60 &quot;bear&quot;) at queue.c:56
+56          newh-&gt;next = q-&gt;head;</code></pre>
+</div>
+<p>indicates the line where the seg fault occurred (line 56 of queue.c). You can then use <code>gdb</code> to print out variable values at that point in the code. Doing so reveals that the pointer <code>q</code> is 0 (NULL).</p>
+<h2 id="grading">Grading</h2>
+Your program will be evaluated out of 60 points using the fifteen traces listed below. You will get credit (between 1 and 8 points, depending on the trace) for each one that executes correctly. The provided <code>driver.py</code> runs <code>qtest</code> on the traces and computes the score. This is the same program that will be used to compute your grade. You can invoke the driver directly with the command:
+<div class="sourceCode">
+<pre class="sourcecode"><code>./driver.py</code></pre>
+</div>
+or with the command:
+<div class="sourceCode">
+<pre class="sourcecode"><code>make test</code></pre>
+</div>
+<p>Definitely leave <code>q_reverse</code> for last. It’s really more of an extra-credit problem than a core part of the lab. You can earn 59/60 without attempting it.</p>
+<p>While the autograder will assign 0 points for a test that doesn’t pass, partial credit can be earned for evidence of a good-faith effort. Comments explaining your approach can help earn partial credit.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Test</th>
+<th>Points</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>trace-01-ops</code> passes</td>
+<td>8 points</td>
+</tr>
+<tr class="even">
+<td><code>trace-02-ops</code> passes</td>
+<td>8 points</td>
+</tr>
+<tr class="odd">
+<td><code>trace-03-ops</code> passes</td>
+<td>6 points</td>
+</tr>
+<tr class="even">
+<td><code>trace-04-ops</code> passes</td>
+<td>6 points</td>
+</tr>
+<tr class="odd">
+<td><code>trace-05-ops</code> passes</td>
+<td>1 points</td>
+</tr>
+<tr class="even">
+<td><code>trace-06-string</code> passes</td>
+<td>6 points</td>
+</tr>
+<tr class="odd">
+<td><code>trace-07-robust</code> passes</td>
+<td>2 points</td>
+</tr>
+<tr class="even">
+<td><code>trace-08-robust</code> passes</td>
+<td>2 points</td>
+</tr>
+<tr class="odd">
+<td><code>trace-09-robust</code> passes</td>
+<td>3 points</td>
+</tr>
+<tr class="even">
+<td><code>trace-10-malloc</code> passes</td>
+<td>4 points</td>
+</tr>
+<tr class="odd">
+<td><code>trace-11-malloc</code> passes</td>
+<td>4 points</td>
+</tr>
+<tr class="even">
+<td><code>trace-12-malloc</code> passes</td>
+<td>4 points</td>
+</tr>
+<tr class="odd">
+<td><code>trace-13-perf</code> passes</td>
+<td>1 points</td>
+</tr>
+<tr class="even">
+<td><code>trace-14-perf</code> passes</td>
+<td>2 points</td>
+</tr>
+<tr class="odd">
+<td>Check-in post</td>
+<td>3 points</td>
+</tr>
+</tbody>
+</table>
+<section class="footnotes" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>This lab is adapted from the C Programming Lab developed for CMU’s 15-213 (Introduction to Computer Systems), available <a href="https://www.cs.cmu.edu/afs/cs/academic/class/15213-f19/www/labs/cprogramminglab.pdf">here</a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>Short for <em>American Standard Code for Information Interchange</em>, developed for communicating via teletype machines.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</body>
+</html>

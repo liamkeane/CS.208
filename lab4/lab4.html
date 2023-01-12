@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Aaron Bauer" />
+  <meta name="dcterms.date" content="2022-05-09" />
+  <title>Lab 4: Malloc Lab</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        background-color: #fffcf5;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {  background-color: #fffcf5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ef2929; background-color: #fffcf5; } /* Alert */
+    code span.an { color: #8f5902; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #c4a000; background-color: #fffcf5; } /* Attribute */
+    code span.bn { color: #0000cf; background-color: #fffcf5; } /* BaseN */
+    code span.cf { color: #006fe0; background-color: #fffcf5; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #d0372d; background-color: #fffcf5; } /* Char */
+    code span.cn { color: #d0372d; background-color: #fffcf5; } /* Constant */
+    code span.co { color: #8d8d84; background-color: #fffcf5; } /* Comment */
+    code span.cv { color: #8d8d84; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #8d8d84; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Documentation */
+    code span.dt { color: #6434a3; background-color: #fffcf5; } /* DataType */
+    code span.dv { color: #0000cf; background-color: #fffcf5; } /* DecVal */
+    code span.er { color: #a40000; background-color: #fffcf5; font-weight: bold; } /* Error */
+    code span.ex { background-color: #fffcf5; } /* Extension */
+    code span.fl { color: #d0372d; background-color: #fffcf5; } /* Float */
+    code span.fu { color: #006699; background-color: #fffcf5; } /* Function */
+    code span.im { background-color: #fffcf5; } /* Import */
+    code span.in { color: #8f5902; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #0000ff; background-color: #fffcf5; font-weight: bold; } /* Keyword */
+    code span.op { color: #006fe0; background-color: #fffcf5; font-weight: bold; } /* Operator */
+    code span.ot { color: #8f5902; background-color: #fffcf5; } /* Other */
+    code span.pp { color: #808080; background-color: #fffcf5; font-style: italic; } /* Preprocessor */
+    code span.sc { color: #000000; background-color: #fffcf5; } /* SpecialChar */
+    code span.ss { color: #4e9a06; background-color: #fffcf5; } /* SpecialString */
+    code span.st { color: #008000; background-color: #fffcf5; } /* String */
+    code span.va { color: #ba36a5; background-color: #fffcf5; } /* Variable */
+    code span.vs { color: #4e9a06; background-color: #fffcf5; } /* VerbatimString */
+    code span.wa { color: #8f5902; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="lab-style.css" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
+  <link rel="manifest" href="./site.webmanifest">
+
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Lab 4: Malloc Lab</h1>
+<p class="author">Aaron Bauer</p>
+<p class="date">May 9, 2022</p>
+</header>
+<div class="wrapper">
+<h1 id="lab-4-writing-a-dynamic-storage-allocator1">Lab 4: Writing a
+Dynamic Storage Allocator<a href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a></h1>
+<ul>
+<li><strong>Assigned:</strong> Wednesday, May 11</li>
+<li><strong>Check-in Post:</strong> Before 9pm Wednesday, May 18 (<a
+href="https://moodle.carleton.edu/mod/forum/view.php?id=743572">check-in
+forum</a>)</li>
+<li><strong>Due:</strong> 9pm Monday, May 23</li>
+<li><strong>Collaboration:</strong> This assignment can be done with a
+partner or individually — <strong>everyone must fill out the <a
+href="https://docs.google.com/forms/d/e/1FAIpQLScyzo1aBh1P8OqxAKDNw1msaAAcFjJeWbgooTKq3YYM8x-5qg/viewform?usp=sf_link">partner
+survey</a></strong></li>
+<li><strong>Handout:</strong> <a
+href="lab4-handout.tar">lab4-handout.tar</a></li>
+<li><strong>Submit:</strong> Upload your <code>mm.c</code> file to <a
+href="https://moodle.carleton.edu/mod/assign/view.php?id=743561">Lab
+4</a> on Moodle</li>
+<li><strong>References:</strong>
+<ul>
+<li><a href="../notes/malloc-free.html">Dynamic Memory Allocation:
+malloc and free</a></li>
+<li><a href="../notes/free-lists.html">Free Lists</a></li>
+<li><a href="../notes/free-list-worksheet.html">Implicit Free List
+Design Worksheet</a></li>
+<li><a href="../notes/explicit-list-freeing.pdf">Freeing with an
+Explicit Free List</a></li>
+<li>CSPP section 9.9.12 walks through the implicit free list
+implementation</li>
+<li><a href="../style-guide.html">208 Style Guide</a></li>
+</ul></li>
+</ul>
+<h2 id="introduction">Introduction</h2>
+<p>In this lab you will be writing a dynamic storage allocator for C
+programs, i.e., your own version of the <code>malloc</code>,
+<code>free</code>, and (for extra credit) <code>realloc</code> routines.
+You are encouraged to explore the design space creatively and implement
+an allocator that is correct, efficient and fast.</p>
+<p>The goals of this lab are</p>
+<ul>
+<li>To understand general principles and trade-offs in dynamic memory
+allocation.</li>
+<li>To consider and empirically evaluate the effects of implementation
+and design choices on competing measures of performance.</li>
+<li>To develop defensive design, coding, and debugging skills for
+environments where standard structure and amenities are
+unavailable.</li>
+<li>To build a fundamental system component that you have been using
+(unwittingly?) since the first time you used a computer.</li>
+</ul>
+<h2 id="logistics">Logistics</h2>
+<p>You can do this assignment individually or with a partner.
+<strong>You must fill out the <a
+href="https://docs.google.com/forms/d/e/1FAIpQLScyzo1aBh1P8OqxAKDNw1msaAAcFjJeWbgooTKq3YYM8x-5qg/viewform?usp=sf_link">partner
+survey</a> regardless of whether you will be working with a
+partner.</strong> The survey gives you the option of requesting to be
+matched with a partner. Being matched is not guaranteed, as an odd
+number of people may request a partner. Late days may be used on this
+lab only if both partners have them remaining.</p>
+<h3 id="hand-out-instructions">Hand Out Instructions</h3>
+You can download the files you need for this lab with
+<div class="sourceCode">
+<pre class="sourcecode"><code>    wget http://cs.carleton.edu/faculty/awb/cs208/s22/handouts/lab4-handout.tar</code></pre>
+</div>
+Then run the command
+<div class="sourceCode">
+<pre class="sourcecode"><code>    tar xvf lab4-handout.tar</code></pre>
+</div>
+<p>This will create a directory called <code>lab4-handout</code> that
+contains a number of files. The only file you will be modifying and
+handing in is <code>mm.c</code>. The <code>mdriver.c</code> program is a
+driver program that allows you to evaluate the performance of your
+solution. Use the command <code>make</code> to generate the driver code
+and run it with the command <code>./mdriver -V</code>. (The
+<code>-V</code> flag displays helpful summary information.) The command
+<code>make test</code> will provide nicely formatted information about
+your overall lab grade. Detailed usage information for the
+<code>mdriver</code> testing executable is described later.</p>
+<p>The extracted directory contains the following:</p>
+<ul>
+<li><code>Makefile</code> – recipes for compiling</li>
+<li><code>mdriver.c</code> – testing driver</li>
+<li><code>memlib.h</code> – memory/heap interface</li>
+<li><code>mm.c</code> – memory allocator implementation</li>
+<li><code>mm.h</code> – memory allocator interface</li>
+<li><code>traces/</code> – several trace files (<code>.rep</code>) used
+for simulated testing</li>
+<li>remaining files are testing support files you do not need to
+inspect</li>
+</ul>
+<p>When you have completed the lab, you will hand in only one file
+(<code>mm.c</code>), which contains your solution. The allocator you
+build might work on similar platforms (no guarantees!), but it must work
+on Linux for grading. Compile the allocator and test driver with make to
+produce an executable called <code>mdriver</code>.</p>
+<h2 id="advice">Advice</h2>
+<p>This assignment requires careful bit-level manipulation of memory
+using many of C’s unsafe pointer casting features without much
+structure. Your allocator code will not be enormous, but it will be
+subtle. Take <a href="#preparatory-exercises">planning</a> seriously and
+<a href="#how-to-work">work methodically</a>. Ignoring this advice could
+cost hours or days. Also keep in mind that <a
+href="#performance">performance</a> is a component of the <a
+href="#grading">grading</a> for this assignment.</p>
+<p>We recommend this path for preparation and development of a
+successful allocator:</p>
+<ul>
+<li>Read the <a href="#specification">specification</a>, complete the <a
+href="#preparatory-exercises">preparatory exercises</a>, and review
+[effective work strategies].</li>
+<li><a href="#implicit-free-list">Implement an implicit free list
+allocator in C (and test it).</a></li>
+<li>Optionally, <a href="#explicit-free-list">extend your implicit free
+list allocator to create an explicit free list allocator.</a></li>
+</ul>
+<h2 id="tasks">Tasks</h2>
+<p>You will modify <code>mm.c</code> to implement a memory allocator
+with the interface declared in <code>mm.h</code> and the functionality
+described below.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span>   mm_init<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> <span class="op">*</span>mm_malloc<span class="op">(</span><span class="dt">size_t</span> size<span class="op">);</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span>  mm_free<span class="op">(</span><span class="dt">void</span> <span class="op">*</span>ptr<span class="op">);</span></span></code></pre></div>
+<p>The provided <code>mm.c</code> file partially implements an allocator
+based on an implicit free list. It provides skeletons of several helper
+functions beyond the interface above and an implementation of
+<code>mm_malloc</code> that uses these helper functions. Your job is to
+complete the helper functions (and possibly add more of your own) as
+well as <code>mm_free</code> to implement a memory allocator with good
+balance of memory utilization and throughput. You may use any
+implementation strategy that works (subject to programming rules), but
+performance of your memory allocator is a large component of the grade.
+There are many opportunities for extensions, whether in increasingly
+sophisticated allocator implementations for better performance or in
+analysis and error-checking tools.</p>
+<p>Grading considers design, documentation, style, correctness, and
+performance.</p>
+<p>The remainder of this document includes:</p>
+<ul>
+<li><a href="#preparatory-exercises">Preparatory exercises for designing
+and simulating an implicit free list allocator.</a></li>
+<li><a href="#specification">The allocator specification.</a></li>
+<li><a href="#implementation">Notes on implementing various allocator
+strategies.</a></li>
+<li><a href="#compiling-and-testing">Documentation of the test harness
+for correctness checking and performance evaluation.</a></li>
+<li><a href="#how-to-work">Advice for effective work
+strategies.</a></li>
+<li><a href="#grading">Grading criteria.</a></li>
+</ul>
+<h2 id="preparatory-exercises">Preparatory Exercises</h2>
+<p>As you read this document, complete these exercises to familiarize
+yourself with heap layout, block layout, and the provided starter code.
+<strong>These exercises will help you design your allocator
+implementation before diving into messy implementation details. Good
+planning is key when developing low-level systems software. Feel free to
+discuss these exercises with your classmates.</strong> You can find
+solutions to these exercises <a
+href="https://moodle.carleton.edu/mod/resource/view.php?id=743575">on
+Moodle</a>.</p>
+<p>These exercises will help you plan your allocator implementation and
+avoid wasting time writing C code before you understand what you are
+doing. Tips:</p>
+<ul>
+<li>Take notes on anything you learn during these exercises.</li>
+<li>Read instructions and comments in provided code carefully.</li>
+<li>Draw detailed diagrams of the heap and execute operations on the
+visual heap by hand to become familiar with the details or debug.</li>
+<li>Every line of provided code does something meaningful and
+necessary.</li>
+</ul>
+<h3 id="a.-heap-and-block-layout">A. Heap and Block Layout</h3>
+<p>Read <code>mm.c</code> to learn about the block layout. Assume words
+are 8 bytes. Pay special attention to the early comments about block and
+heap layout, as well as the code in <code>mm_init</code>.</p>
+<ul>
+<li>What is the minimum block size (in bytes) of our allocator? You may
+want to <code>#define</code> a constant for this value.</li>
+<li>What is stored in the header of each block?</li>
+<li>What is stored in the footer of each free block?</li>
+<li>What is the largest payload that could be allocated in a
+minimum-size block?</li>
+<li>What is stored in the last word of the heap? (We call this the
+epilogue block.)</li>
+<li>How much space in the heap is never part of any block?</li>
+</ul>
+<p>For the following questions, draw memory as an array of words (but
+not to scale when using big numbers). Use the block layout rules from
+<code>mm.c</code> and especially the heap setup code in
+<code>mm_init</code>. Follow the style of heap drawings used in the
+CSAPP book (Figures 9.36-9.38), but remember that block details will
+vary. Always draw the heap header word, the heap footer word, and the
+headers (and footers as needed) for all blocks in the heap.</p>
+<ul>
+<li>Draw a heap that contains a single allocated block with size 48.
+(Assume total heap size = 80 bytes)</li>
+<li>Draw a heap that contains a single free block with size 64. (Assume
+total heap size = 96 bytes)</li>
+<li>Draw a heap that contains an allocated block with size 48, followed
+by a free block of size 32. (Assume total heap size = 112 bytes)</li>
+<li>Draw a heap that contains a free block of size 32, followed by an
+allocated block of size 48. (Assume total heap size = 112 bytes)</li>
+</ul>
+<h3 id="b.-simulate-the-starter-allocator">B. Simulate the Starter
+Allocator</h3>
+<p>Simulate the starter allocator code by hand starting from an heap
+generated by a call to <code>mm_init</code>. Update a drawing of the
+heap as you go, following the drawing guidelines from part A. Show
+exactly what this starter allocator does, not your idea of what an
+allocator should do. This will force you to read and understand the
+provided code carefully in detail. Add comments as you go if it helps
+you to keep notes in addition to the provided comments.</p>
+<p>Starting from a fresh initial heap, simulate the following requests
+and update your drawing based on what the starter code allocator
+does:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>  p0 <span class="op">=</span> mm_malloc<span class="op">(</span><span class="dv">12</span><span class="op">);</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  p1 <span class="op">=</span> mm_malloc<span class="op">(</span><span class="dv">16</span><span class="op">);</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  p2 <span class="op">=</span> mm_malloc<span class="op">(</span><span class="dv">16</span><span class="op">);</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  mm_free<span class="op">(</span>p0<span class="op">);</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  mm_free<span class="op">(</span>p1<span class="op">);</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  p3 <span class="op">=</span> mm_malloc<span class="op">(</span><span class="dv">24</span><span class="op">);</span></span></code></pre></div>
+<p>Starting from fresh initial heaps, simulate the traces
+<code>short1-bal.rep</code> and <code>short2-bal.rep</code> from the
+traces directory in the starter code. The format of trace files is
+described <a href="#trace-format">here</a>.</p>
+<h3 id="c.-starter-functions">C. Starter Functions</h3>
+<ul>
+<li>Given a block pointer <code>bp</code>, write an expression using the
+provided helper macros to return the allocation status of the block
+preceding <code>bp</code> in memory order.</li>
+<li>What fit policy does <code>find_fit</code> employ?</li>
+<li>Why does <code>extend_heap</code> coalesce its newly added space?
+Consider that <code>extend_heap</code> is typically called only if no
+existing free block is large enough to satisfy the current allocation
+request.</li>
+</ul>
+<h3 id="d.-add-and-simulate-pseudocode-features">D. Add and Simulate
+Pseudocode Features</h3>
+<p>For each of the following features, add the feature by sketching
+pseudocode comments within <code>mm.c</code>. Then, before working on
+the next feature, simulate the allocator with this feature on the sample
+traces from the previous part, drawing heap state as you go.</p>
+<ul>
+<li>Sketch a pseudocode implementation of <code>mm_free</code> as
+comments in the body of <code>mm_free</code>.</li>
+<li>Sketch a pseudocode implementation of splitting in
+<code>place</code> as comments in the body of <code>place</code>.</li>
+<li>Sketch a pseudocode implementation of <code>coalesce</code> as
+comments in the body of <code>coalesce</code>.</li>
+</ul>
+<p>Write pseudocode at a sufficient level of detail that you can
+simulate clearly, but do not get tangled up in C-level pointer work.
+Well-written comments at this stage can remain as documentation when you
+move on to implementation in C.</p>
+<h2 id="specification">Specification</h2>
+<h3 id="function-specification">Function Specification</h3>
+<p>The three main memory management functions should work as
+follows:</p>
+<ul>
+<li><code>mm_init()</code>, <strong>provided</strong>: Initialize the
+heap. Before calling <code>mm_malloc</code> or <code>mm_free</code>, the
+application program (i.e., the trace-driven driver program that you will
+use to evaluate your implementation) calls <code>mm_init</code> to
+perform any necessary initializations, such as allocating the initial
+heap area. The return value should be -1 if there was a problem in
+performing the initialization, 0 otherwise.</li>
+<li><code>mm_malloc(size_t size)</code>: allocate and return a pointer
+to an allocated block payload of at least <code>size</code> contiguous
+bytes or return <code>NULL</code> if the requested allocation could not
+be completed.
+<ul>
+<li>The entire allocated block should lie within the heap region and
+should not overlap with any other allocated chunk.</li>
+<li>Payload addresses must be aligned to 16 bytes.</li>
+<li><code>size_t</code> is a type for describing sizes; it is an
+unsigned integer large enough to represent any size within the address
+space.</li>
+</ul></li>
+<li><code>mm_free(void *ptr)</code>: free the block whose payload is
+pointed to by <code>ptr</code>. It returns nothing. Assume that payload
+was returned by an earlier call to <code>mm_malloc</code> and has not
+been passed to <code>mm_free</code> since its most recent return from
+<code>mm_malloc</code>.</li>
+</ul>
+<p>These semantics match the the semantics of the corresponding C
+library <code>malloc</code> and <code>free</code> routines. Run
+<code>man malloc</code> in the terminal for complete documentation.</p>
+<h3 id="support-routines">Support Routines</h3>
+<p>The <code>memlib.c</code> package simulates the memory system for
+your dynamic memory allocator. You can invoke the following functions in
+<code>memlib.c</code>:</p>
+<ul>
+<li><code>void *mem_sbrk(int incr)</code>: Expands the heap by
+<code>incr</code> bytes, where <code>incr</code> is a positive non-zero
+integer and returns a pointer to the first byte of the newly allocated
+heap area. The semantics are identical to the Unix <code>sbrk</code>
+function, except that <code>mem_sbrk</code> accepts only a positive
+non-zero integer argument.</li>
+<li><code>void *mem_heap_lo(void)</code>: Returns a pointer to the first
+byte in the heap.</li>
+<li><code>void *mem_heap_hi(void)</code>: Returns a pointer to the last
+byte in the heap.</li>
+<li><code>size_t mem_heapsize(void)</code>: Returns the current size of
+the heap in bytes.</li>
+<li><code>size_t mem_pagesize(void)</code>: Returns the system’s page
+size in bytes (4K on Linux systems).</li>
+</ul>
+<h3 id="programming-rules">Programming Rules}</h3>
+<ul>
+<li>Do not change any of the <code>mm_</code> function types in
+<code>mm.c</code> or <code>mm.h</code>. You may add, remove, or change
+helper functions in <code>mm.c</code> as you wish. Declare all helper
+functions (other than the interface above) as <code>static</code>
+(visible only within the file).</li>
+<li>Do not call any standard memory-management related library functions
+or system calls such as <code>malloc</code>, <code>calloc</code>,
+<code>free</code>, etc. You may use all functions in
+<code>memlib.c</code>, but if you use the provided starter code, you
+likely will not need additional uses of the <code>memlib.c</code>
+functions.</li>
+<li>Avoid declaring additional global or static variables. If you think
+you need them, consider how to store them within the heap region
+instead.</li>
+<li>Write function header comments for new functions (and expand the
+existing header comments for the main existing functions
+<code>mm_malloc</code>, <code>mm_free</code>, <code>find_fit</code>,
+<code>place</code>, and <code>coalesce</code>) to describe what the
+function does, what policy it follows (if applicable), and what it
+assumes. Use inline comments to describe details as needed.</li>
+<li>Since some of the unstructured pointer manipulation inherent to
+allocators can be confusing, we recommend small helper functions and
+short inline comments on steps of the allocation algorithms.</li>
+</ul>
+<h2 id="implementation">Implementation</h2>
+<p>You may take any approach to implementing the specified allocator
+behavior above. Your implementation will be evaluated based on
+correctness, performance, documentation, and style. This section
+suggests an incremental implementation strategy that allows you to
+choose what balance of implementation sophistication and performance you
+prefer.</p>
+<p>Start with an implicit free list allocator implementation. If you
+wish to improve the performance of your allocator once you have
+implemented and tested an implicit free list approach, consider an
+explicit free list or other search, coalescing, and splitting strategies
+as next steps.</p>
+<h3 id="implicit-free-list">Implicit Free List</h3>
+<p>Convert your pseudocode feature implementations to C code
+<strong><em>one at a time, testing each before starting C code for the
+next feature</em></strong>.</p>
+<ul>
+<li>Implement and test <code>mm_free</code>.</li>
+<li>Implement and test splitting in <code>place</code>.</li>
+<li>Implement and test <code>coalesce</code>.</li>
+</ul>
+<p>Run tests on individual traces for [debugging] and on all traces for
+general testing and <a href="#performance">performance</a>
+evaluation.</p>
+<ul>
+<li>Some provided traces will cause your allocator to run out of memory
+unless you have completed all three features.</li>
+<li>Any other errors or crashes indicate correctness problems you must
+fix.</li>
+<li>The traces <code>short1-bal.rep</code> and
+<code>short2-bal.rep</code> should work from the beginning, but they are
+suitable only as small debugging samples.</li>
+<li>Write your own <a href="#trace-format">small traces</a> to help test
+or debug individual cases.</li>
+<li>Use <a href="#heap-consistency-checker"><code>check_heap</code></a>
+to sanity-check each feature before implementing the next or to help
+debug when things go wrong.</li>
+</ul>
+<h3 id="explicit-free-list">Explicit Free List</h3>
+<div class="box alert_box">
+<div class="warning">
+Memory Order vs List Order
+</div>
+<p>Explicit free-list allocators must distinguish <em>memory order</em>
+from list order. <strong><em>Memory order</em></strong> refers to the
+order of blocks as arranged in the memory address space. We use the
+terms <strong><em>adjacent</em></strong>,
+<strong><em>preceding</em></strong>,
+<strong><em>predecessor</em></strong>,
+<strong><em>following</em></strong>, and
+<strong><em>successor</em></strong> to refer to memory order.
+<strong><em>List order</em></strong> refers to the order of blocks in
+the explicit free list. We use the terms <strong><em>next</em></strong>
+and <strong><em>previous</em></strong> to refer to list order.
+<strong>Confusing these orders will lead to tricky bugs.</strong></p>
+</div>
+<p>The best way to develop an explicit free list allocator is to first
+develop a working implicit free list allocator and extend it to use
+explicit free lists. Save a copy of your implicit free list allocator
+before you start working on improving it, so you have a working
+allocator as a reference (and a fallback).</p>
+<p>Some suggestions as you implement explicit free lists:</p>
+<ul>
+<li>An explicit free list allocator (or a next-fit allocator) must store
+a pointer to the list head node somewhere. The first word of the heap
+(or a single global pointer variable if necessary) is a good place to
+store this. Helper functions for getting and setting this pointer will
+keep list manipulations clean.</li>
+<li>Free blocks must contain next and previous pointers. Consider how
+this affects the minimum block size. Choose a fixed offset within the
+block to store each of the pointers. Helper functions for getting and
+setting these pointers will keep list manipulations clean.</li>
+<li>Helper functions to insert a block into the free list and remove a
+block from the free list are advisable, as you will need to do these
+same steps in multiple places.</li>
+<li>We suggest disabling coalescing, splitting and <code>mm_free</code>
+while you complete initial development of the explicit free list.</li>
+<li>Update <code>mm_init</code>, <code>find_fit</code>,
+<code>place</code>, and <code>extend_heap</code> to use your explicit
+free list. Test.</li>
+<li>Update and test each of <code>mm_free</code>, splitting, and
+coalescing for the explicit free list.</li>
+</ul>
+<h3 id="alternative-policies-and-beyond">Alternative Policies and
+Beyond</h3>
+<p>A clean and efficient working explicit free list allocator should
+achieve a respectable <a href="#performance">performance index</a>. To
+achieve even better performance, you could consider implementing
+deferred coalescing, the boundary tag optimization described in the
+textbook, alternative ways of splitting, or alternative search
+strategies. Segregated free lists (CSPP section 9.9.14) or approaches
+using self-balancing trees can very extremely efficient, but
+correspondingly tricky to get right. If you embark on this path, weigh
+difficulty of implementation against likely effect on performance
+index.</p>
+<h2 id="compiling-and-testing">Compiling and Testing</h2>
+<p>The <code>mdriver</code> program tests your <code>mm.c</code>
+implementation for correctness, space utilization, and throughput. Build
+<code>mdriver</code> with <code>make</code> and run it with the command
+<code>./mdriver -V</code>. (The <code>-V</code> flag displays helpful
+summary information as described below).</p>
+<p><code>mdriver</code> uses <a href="#trace-format">trace files</a> to
+simulate memory management workloads using your <code>mm.c</code>
+implementation. A trace is a sequence of <em>allocate</em> and
+<em>free</em> events. <code>mdriver</code> simulates a trace by calling
+<code>mm_malloc</code> and <code>mm_free</code> for each corresponding
+event in the trace in order.</p>
+<p>The <code>mdriver</code> executable accepts the following command
+line arguments:</p>
+<ul>
+<li><code>-t TRACEDIR</code>: Look for the default trace files in
+directory <code>TRACEDIR</code> instead of the default directory defined
+in <code>config.h</code>.</li>
+<li><code>-f TRACEFILE</code>: Use one particular <code>TRACEFILE</code>
+for testing instead of the default set of tracefiles.</li>
+<li><code>-h</code>: Print a summary of the command line arguments.</li>
+<li><code>-l</code>: Run and measure <code>libc</code> malloc in
+addition to your <code>mm.c</code> implementation.</li>
+<li><code>-v</code>: Verbose output. Print a performance breakdown for
+each tracefile in a compact table.</li>
+<li><code>-V</code>: More verbose output. Prints additional diagnostic
+information as each trace file is processed. Useful during debugging for
+determining which trace file is causing your <code>mm.c</code>
+implementation to fail.</li>
+</ul>
+<h3 id="common-testing-tasks">Common Testing Tasks</h3>
+<ul>
+<li>Run <code>mdriver</code> on individual traces for debugging:
+<code>./mdriver -V -f traces/your-favorite-trace.rep</code></li>
+<li>Run <code>mdriver</code> on all traces for correctness testing and
+performance evaluation: <code>./mdriver -V</code></li>
+<li>Some traces in the <code>traces</code> directory will cause your
+allocator to run out of memory until you have completed all three
+implicit allocator features.</li>
+<li>Any other errors (other than out-of-memory) or crashes indicate
+correctness problems you must fix.</li>
+<li>The traces <code>short1-bal.rep</code> and
+<code>short2-bal.rep</code> should work from the beginning. You may find
+it useful to write additional traces for debugging.</li>
+</ul>
+<h3 id="trace-format">Trace Format</h3>
+<p>When learning about the starter code, you will simulate small traces.
+When testing and debugging, you may find it useful to write and test
+your own small traces.</p>
+<p>Traces used by <code>mdriver</code> summarize the execution of a
+program as a sequence of <code>mm_malloc</code> and <code>mm_free</code>
+calls in a simple format.</p>
+<p>A trace file contains 4 header lines:</p>
+<ul>
+<li>Suggested heap size (any number, ignored by our tests).</li>
+<li>Total number of blocks allocated.</li>
+<li>Total number of malloc/free events.</li>
+<li>Weight (any number, ignored by our tests).</li>
+</ul>
+<p>Remaining lines after the header give a sequence of memory management
+events, one per line. Each event is either an allocate event or a free
+event:</p>
+<ul>
+<li>Event <code>a I SIZE</code> indicates the <code>I</code>th call to
+<code>malloc</code> in the trace, requesting payload <code>SIZE</code>.
+The ID <code>I</code> uniquely identifies the <code>malloc</code> call
+and the allocation it makes, starting at 0 for the first allocation in
+the trace.</li>
+<li>Event <code>f I</code> indicates a call to <code>mm_free</code> with
+the pointer that was returned by the <code>I</code>th
+<code>malloc</code> call in the trace.</li>
+</ul>
+<p>The following example C code would generate the corresponding trace
+below it.</p>
+<p>C code:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>p0 <span class="op">=</span> malloc<span class="op">(</span><span class="dv">12</span><span class="op">);</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">=</span> malloc<span class="op">(</span><span class="dv">16</span><span class="op">);</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>p2 <span class="op">=</span> malloc<span class="op">(</span><span class="dv">16</span><span class="op">);</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>free<span class="op">(</span>p0<span class="op">);</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>free<span class="op">(</span>p1<span class="op">);</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>p3 <span class="op">=</span> malloc<span class="op">(</span><span class="dv">24</span><span class="op">);</span></span></code></pre></div>
+A corresponding trace:
+<div class="sourceCode">
+<pre class="sourcecode"><code>128
+4
+6
+1
+a 0 12
+a 1 16
+a 2 16
+f 0
+f 1
+a 3 24</code></pre>
+</div>
+<h3 id="heap-consistency-checker">Heap Consistency Checker</h3>
+Dynamic memory allocators are notoriously tricky beasts to program
+correctly and efficiently. They are difficult to program correctly
+because they involve a lot of untyped pointer manipulation.<br />
+You will find it very helpful to use the provided heap checker function
+<code>check_heap</code> that scans the heap and checks it for
+consistency. <strong>Make sure to remove all calls to
+<code>check_heap</code> before submitting your code. It will definitely
+affect performance evaluation.</strong> <code>check_heap</code> takes a
+line number as a parameter, so that any error messages can be tagged
+with the line where <code>check_heap</code> was called. You can do this
+with
+<div class="sourceCode">
+<pre class="sourcecode"><code>  check_heap(__LINE__);</code></pre>
+</div>
+<p>The compiler will automatically fill in <code>__LINE__</code> with
+the correct line number.</p>
+<p>A <code>print_heap</code> function is also provided that prints out
+the current state of the implicit free list.</p>
+<p>You may also find it helpful to extend the <code>check_heap</code>
+function to check more detailed consistency properties. This becomes
+most interesting when considering an explicit free list (or more
+sophisticated) allocator. <code>check_heap</code> should return a
+nonzero value if and only if your heap is consistent according to the
+conditions you check.</p>
+<p>Example checks to add:</p>
+<ul>
+<li>Are all blocks present in the (explicit) free list also marked as
+free?</li>
+<li>Are all blocks present in the (explicit) free list also valid block
+addresses?</li>
+<li>Are all blocks marked as free also present in the (explicit) free
+list?</li>
+<li>Are all free blocks surrounded by allocated blocks (i.e., are all
+free blocks fully coalesced)?</li>
+<li>Are all blocks non-overlapping (check boundary tags)?</li>
+<li>Are all heap words (except the heap header and heap footer) part of
+some block?</li>
+</ul>
+<p>Feel free to rename or split <code>check_heap</code> into multiple
+static helper functions. When you submit <code>mm.c</code>, make sure to
+disable any calls to <code>check_heap</code> as they will impact
+performance.</p>
+<h2 id="performance">Performance</h2>
+<div class="box alert_box">
+<div class="warning">
+Use <code>mdriver.opt</code> for performance evaluation.
+</div>
+<p>The <code>mdriver.opt</code> executable is a second version of
+<code>mdriver</code> that is compiled with aggressive compiler
+optimizations enabled and assertions disabled. Run
+<code>make mdriver.opt</code> to create it. Use <code>mdriver.opt</code>
+for performance evaluation, but use the normal <code>mdriver</code>
+during testing and debugging. Enabling optimizations and disabling
+assertions may be necessary to reach the highest levels of performance,
+but they can make debugging more difficult.</p>
+</div>
+<p>For the most part, a correct implementation based on our provided
+code will yield passable performance. Two performance metrics will be
+used to evaluate your solution:</p>
+<ul>
+<li><em>Memory utilization</em>: The peak ratio between the aggregate
+amount of memory used by the driver (i.e., allocated via
+<code>mm_malloc</code> but not yet freed via <code>mm_free</code>) and
+the size of the heap used by your allocator. The optimal ratio equals to
+1. You should find good policies to minimize fragmentation in order to
+make this ratio as close as possible to the optimal.</li>
+<li><em>Throughput</em>: The average number of operations completed per
+second.</li>
+</ul>
+<p>The driver program summarizes the performance of your allocator by
+computing a <em>performance index</em>, <span
+class="math inline">\(P\)</span>, which is a weighted sum of the space
+utilization and throughput <span class="math display">\[ P = 0.6\times
+U_{mm.c} + 0.4\times \min\left(1, \frac{T_{mm.c}}{T_{libc}}\right)
+\]</span> where <span class="math inline">\(U_{mm.c}\)</span> is your
+space utilization, <span class="math inline">\(T_{mm.c}\)</span> is your
+throughput, and <span class="math inline">\(T_{libc}\)</span> is the
+estimated throughput of <code>libc</code> malloc on your system on the
+default traces.<a href="#fn2" class="footnote-ref" id="fnref2"
+role="doc-noteref"><sup>2</sup></a> The performance index values both
+good space utilization and good throughput, with slight preference
+toward space efficiency.</p>
+<p>Your allocator must balance utilization and throughput. A performance
+index of 70-80 or above (out of 100) is pretty good. For reference, an
+implicit free list with splitting and coalescing should achieve an index
+in the 50s.</p>
+<h2 id="how-to-work">How To Work</h2>
+<p>Low-level unguarded memory manipulation code like this allocator is
+prone to subtle and frustrating bugs. There’s a reason you often use
+higher-level languages with more protections! The following strategies
+help to work effectively and responsibly to avoid frustration and
+confusion.</p>
+<h3 id="plan-carefully">Plan Carefully</h3>
+<p>Review allocator concepts, complete the <a
+href="#preparatory-exercises">preparatory exercises</a>, and read the
+provided code carefully. Never write code until you have a good idea of
+what you are doing and what is already there.</p>
+<h3 id="code-defensively">Code Defensively</h3>
+<p>Expect things to go wrong. Anywhere your code relies on an
+assumption, check it explicitly. Explain to your partner why your code
+should work. Write error-prone code once carefully and reuse it.</p>
+<ul>
+<li>Use <a
+href="http://www.cplusplus.com/reference/cassert/assert/">assertions</a>.
+Anywhere you assume a property of data to hold, assert that property
+explicitly. Assertions <a
+href="https://ptolemy.berkeley.edu/~johnr/tutorials/assertions.html">document
+your assumptions</a>. They are also checked explicitly as your program
+runs, making it easier to localize the source of an error if one
+occurs.</li>
+<li>Use the provided macros for memory access (<code>GET</code>,
+<code>PUT</code>) and pointer arithmetic (<code>PADD</code> and
+<code>PSUB</code>). This helps avoid pointer manipulation errors or at
+least catch them early.</li>
+</ul>
+<h3 id="implement-and-test-incrementally">Implement and Test
+Incrementally</h3>
+<p>Implement and test one feature (or sub-feature!) at a time, testing
+each before you start implementing the next. This will make it much
+easier to understand what code is involved in a bug.</p>
+<h3 id="debug-methodically">Debug Methodically</h3>
+<p><code>gdb</code>, <code>check_heap</code>, and especially
+<code>print_heap</code> functions are the tools of choice. Here are some
+strategies and other tips.</p>
+<ul>
+<li>Did your program hit an explicit error? An assertion failure? A
+segfault?
+<ul>
+<li><strong>Localize the crash</strong>. Exactly what line of code, what
+operation in this line, what value(s) used by this operation manifested
+what error and crashed? This symptom rarely indicates the cause, but it
+marks where to begin the search.
+<ul>
+<li>Use <code>gdb</code> to run the code until it crashes, then find the
+line that crashed (and the context in which it executed) with
+<code>bt</code>, <code>backtrace</code>, or <code>where</code>.</li>
+<li>Inspect the most relevant line of code and the error report to
+determine what the error means. Was it a segfault? If it was an
+assertion failure, what was the assertion checking?</li>
+<li>Using <code>gdb</code>, inspect the arguments shown in the backtrace
+or <code>print</code> variables to determine what ill-formed pointer was
+dereferenced to cause a segmentation fault or what illegal values failed
+an assertion.</li>
+</ul></li>
+<li><strong>Trace backward through the dependences of this broken
+operation to the original logic error.</strong>
+<ul>
+<li><strong>Invalid values</strong>: Did any of this operation’s
+arguments hold invalid values? Did this operation load any invalid
+values from memory?</li>
+<li><strong>Invalid choices</strong>: Was it invalid to apply this
+operation here given correct arguments (or regardless of the
+arguments)?</li>
+<li><strong>Callers</strong>: You may need to trace back beyond the
+function where the crash happened.
+<ul>
+<li>Get a <code>backtrace</code> to see where the current function was
+called. (Don’t just assume you know which function called this one. Get
+the truth.)</li>
+<li>If you want to inspect local variables in functions that called this
+one, use <code>up</code> and <code>down</code> in <code>gdb</code> to
+step up and down the call stack, then <code>print</code> what you want
+to see.</li>
+</ul></li>
+<li><strong>Memory</strong>: Remember, <code>mm_malloc</code> and
+<code>mm_free</code> are called many times during a single execution.
+They depend on their arguments, but also the entire contents of the heap
+as it exists when they are called, so changes made by earlier calls to
+<code>mm_malloc</code> and <code>mm_free</code> affect data used by this
+one.
+<ul>
+<li>Use the <code>check_heap</code> function to scan the heap and
+<code>print_heap</code> to print it.</li>
+<li>Run them at arbitrary times in <code>gdb</code> with
+<code>call check_heap(0)</code> or <code>call print_heap()</code> (these
+functions will need to be called at least once in your code for this to
+work).</li>
+<li>Or hard-code calls to these two functions in your code so you see
+how the heap evolves with each <code>mm_malloc</code> or
+<code>mm_free</code> call.</li>
+<li><strong>I have found looking at the output of
+<code>print_heap</code> to be the most effective debugging
+tool</strong></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li>Minimize the input. Try to <a href="#trace-format">write a small
+trace</a> that captures the essence of the large trace on which your
+allocator has an error. A smaller trace is easier to reason about in
+full.</li>
+<li>Add print statements to help you track the heap operations prior to
+an error. A <code>printf</code> at the beginning of each function with
+the function name and the value of its arguments is often helpful.
+<strong>Disable any printing in final version</strong>.</li>
+<li>Use the <code>mdriver -f</code> option. During initial development,
+using tiny trace files will simplify debugging and testing. We have
+included two such trace files (<code>short1-bal.rep</code> and
+<code>short2-bal.rep</code>) that you can use for initial debugging. You
+can also write your own for targeted debugging/testing.</li>
+<li>Use the <code>mdriver -V</code> option. The <code>-V</code> will
+option will give a detailed summary for each trace file and indicate
+when each trace file is read, which will help you isolate errors.</li>
+<li>Does your code seem to be running forever?
+<ul>
+<li>That might be because it is no longer broken! Comment out those
+calls to <code>check_heap</code> and <code>print_heap</code>. Printing
+the full contents of the heap on every memory management event costs
+orders of magnitude more than the allocations or frees themselves.</li>
+<li>Or it might be because you have a size 0 block somewhere other than
+the heap epilogue.</li>
+</ul></li>
+</ul>
+<h2 id="what-to-turn-in">What To Turn In</h2>
+<div class="box alert_box">
+<div class="warning">
+
+</div>
+<p>Before submitting, remove calls to <code>check_heap</code>,
+<code>print_heap</code>, and any diagnostic printing that you added
+outside of these functions.</p>
+</div>
+<p>Submit your <code>mm.c</code> file to <a
+href="https://moodle.carleton.edu/mod/assign/view.php?id=743561">Lab
+4</a> on Moodle. You do not need to turn in anything else. If you are
+working with a partner, only one person needs to submit (make sure both
+of your names are in the top comment).</p>
+<h2 id="grading">Grading</h2>
+<p>Your grade will be calculated from 100 points as follows:</p>
+<ul>
+<li><strong>Documentation and Style</strong> (10 points):
+<ul>
+<li>Document your code clearly.</li>
+<li>Follow the [programming rules].</li>
+<li>Your code should be decomposed into functions and use as few global
+variables as possible.</li>
+<li>Your code should begin with a comment that describes the structure
+of your free and allocated blocks, the organization of the free list,
+and how your allocator manipulates the free list.</li>
+<li>Each function should have a comment that describes what it does and
+how it does it.</li>
+</ul></li>
+<li><strong>Correctness</strong> (40 points): based on passing
+<code>mdriver</code> tests (split evenly among the 11 provided
+traces).</li>
+<li><strong>Performance</strong> (45 points): <span
+class="math inline">\(45 \times P\)</span> (<span
+class="math inline">\(P\)</span> is the <a
+href="#performance"><code>mdriver</code> performance index</a>).</li>
+<li><strong>Check-in post</strong> (5 points)</li>
+</ul>
+<p>You may use any implementation strategy that works (subject to
+programming rules). Allocator performance is a significant component of
+the grade for this lab. Do the arithmetic: a high-quality implicit free
+list allocator can achieve a reasonable grade.</p>
+<h2 id="optional-extra-credit-implement-realloc">OPTIONAL Extra Credit:
+Implement <code>realloc</code></h2>
+<p>Implement a final memory allocation-related function:
+<code>mm_realloc</code>. The signature for this function, which you will
+find in your <code>mm.h</code> file, is:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">extern</span> <span class="dt">void</span><span class="op">*</span> mm_realloc<span class="op">(</span><span class="dt">void</span><span class="op">*</span> ptr<span class="op">,</span> <span class="dt">size_t</span> size<span class="op">);</span></span></code></pre></div>
+<p>The <code>mm_realloc</code> function returns a pointer to an
+allocated region of at least <code>size</code> bytes with the following
+constraints.</p>
+<ul>
+<li><p>if <code>ptr</code> is <code>NULL</code>, the call is equivalent
+to <code>mm_malloc(size)</code></p></li>
+<li><p>if <code>size</code> is equal to zero, the call is equivalent to
+<code>mm_free(ptr)</code></p></li>
+<li><p>if <code>ptr</code> is not <code>NULL</code>, it must have been
+returned by an earlier call to <code>mm_malloc</code> or
+<code>mm_realloc</code>. The call to <code>mm_realloc</code> changes the
+size of the memory block pointed to by <code>ptr</code> (the <em>old
+block</em>) to <code>size</code> bytes and returns the address of the
+new block. Notice that the address of the new block might be the same as
+the old block, or it might be different, depending on your
+implementation, the mount of internal fragmentation in the old block,
+and the size of the realloc request.</p>
+<p>The contents of the new block are the same as those of the old
+<code>ptr</code> block, up to the minimum of the old and new sizes.
+Everything else is uninitialized. For example, if the old block is 8
+bytes and the new block is 12 bytes, then the first 8 bytes of the new
+block are identical to the first 8 bytes of the old block and the last 4
+bytes are uninitialized. Similarly, if the old block is 8 bytes and the
+new block is 4 bytes, then the contents of the new block are identical
+to the first 4 bytes of the old block.</p></li>
+</ul>
+<p>To run tests with <code>mm_realloc</code>, switch out
+<code>mdriver.c</code> with <code>mdriver-realloc.c</code> (to do this
+rename <code>mdriver-realloc.c</code> to <code>mdriver.c</code>, and
+delete or rename the original). To run <code>mm_realloc</code>
+tracefiles, run the driver with the <code>-f</code> flag to specify a
+tracefile, or first edit <code>config.h</code> to include additional
+<code>realloc</code> tracefiles in the default list. The
+<code>realloc</code> traces will not be evaluated for performance, only
+correctness. Each of the two test cases is worth 3 points of extra
+credit if it passes.</p>
+<section class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>This lab is adapted from the Malloc
+Lab developed for <em>Computer Systems: A Programmer’s Perspective</em>
+by <a href="http://www.cs.cmu.edu/~bryant">Randal E. Bryant</a> and <a
+href="http://www.cs.cmu.edu/~droh">David R. O’Hallaron</a>, Carnegie
+Mellon University, available <a
+href="http://csapp.cs.cmu.edu/3e/labs.html">here</a>.<a href="#fnref1"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>The value for <span
+class="math inline">\(T_{libc}\)</span> is a constant in the driver
+(6000 Kops/s) that was established by testing the throughput of
+<code>malloc</code> and <code>free</code> on <code>mantis</code>.<a
+href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</body>
+</html>

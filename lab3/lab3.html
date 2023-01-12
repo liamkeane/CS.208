@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Aaron Bauer" />
+  <meta name="dcterms.date" content="2022-05-03" />
+  <title>Lab 3: Attack Lab</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        background-color: #fffcf5;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {  background-color: #fffcf5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ef2929; background-color: #fffcf5; } /* Alert */
+    code span.an { color: #8f5902; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #c4a000; background-color: #fffcf5; } /* Attribute */
+    code span.bn { color: #0000cf; background-color: #fffcf5; } /* BaseN */
+    code span.cf { color: #006fe0; background-color: #fffcf5; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #d0372d; background-color: #fffcf5; } /* Char */
+    code span.cn { color: #d0372d; background-color: #fffcf5; } /* Constant */
+    code span.co { color: #8d8d84; background-color: #fffcf5; } /* Comment */
+    code span.cv { color: #8d8d84; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #8d8d84; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Documentation */
+    code span.dt { color: #6434a3; background-color: #fffcf5; } /* DataType */
+    code span.dv { color: #0000cf; background-color: #fffcf5; } /* DecVal */
+    code span.er { color: #a40000; background-color: #fffcf5; font-weight: bold; } /* Error */
+    code span.ex { background-color: #fffcf5; } /* Extension */
+    code span.fl { color: #d0372d; background-color: #fffcf5; } /* Float */
+    code span.fu { color: #006699; background-color: #fffcf5; } /* Function */
+    code span.im { background-color: #fffcf5; } /* Import */
+    code span.in { color: #8f5902; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #0000ff; background-color: #fffcf5; font-weight: bold; } /* Keyword */
+    code span.op { color: #006fe0; background-color: #fffcf5; font-weight: bold; } /* Operator */
+    code span.ot { color: #8f5902; background-color: #fffcf5; } /* Other */
+    code span.pp { color: #808080; background-color: #fffcf5; font-style: italic; } /* Preprocessor */
+    code span.sc { color: #000000; background-color: #fffcf5; } /* SpecialChar */
+    code span.ss { color: #4e9a06; background-color: #fffcf5; } /* SpecialString */
+    code span.st { color: #008000; background-color: #fffcf5; } /* String */
+    code span.va { color: #ba36a5; background-color: #fffcf5; } /* Variable */
+    code span.vs { color: #4e9a06; background-color: #fffcf5; } /* VerbatimString */
+    code span.wa { color: #8f5902; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Warning */
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="lab-style.css" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
+  <link rel="manifest" href="./site.webmanifest">
+
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Lab 3: Attack Lab</h1>
+<p class="author">Aaron Bauer</p>
+<p class="date">May 3, 2022</p>
+</header>
+<div class="wrapper">
+<h1 id="lab-3-buffer-overflow-attacks1">Lab 3: Buffer Overflow Attacks<a
+href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a></h1>
+<ul>
+<li><strong>Assigned:</strong> Wednesday, May 4</li>
+<li><strong>Check-in Post:</strong> Before 9pm Monday, May 9 (<a
+href="https://moodle.carleton.edu/mod/forum/view.php?id=743572">check-in
+forum</a>)</li>
+<li><strong>Due:</strong> 9pm Wednesday, May 11</li>
+<li><strong>Collaboration:</strong> This is an individual
+assignment</li>
+<li><strong>Handout:</strong> <a
+href="http://awb66333.mathcs.carleton.edu:15513"
+class="uri">http://awb66333.mathcs.carleton.edu:15513</a></li>
+<li><strong>Submit:</strong> Submission is automatic</li>
+<li><strong>References:</strong>
+<ul>
+<li><a href="../reference-sheet.html">208 Reference Sheet</a></li>
+<li><a
+href="http://csapp.cs.cmu.edu/3e/docs/gdbnotes-x86-64.txt"><code>gdb</code>
+Cheat Sheet</a></li>
+<li><a href="../notes/memory-and-the-stack.html">Memory Layout and the
+Stack</a></li>
+<li><a href="../notes/procedure-calls.html">Implementing Procedure
+Calls</a></li>
+<li><a href="../notes/buffer-overflow.html">Buffer Overflow
+Attacks</a></li>
+<li>CSPP sections 3.10.3 and 3.10.4</li>
+</ul></li>
+</ul>
+<h2 id="introduction">Introduction</h2>
+<p>This assignment involves generating a total of five attacks on two
+programs having different security vulnerabilities. Similar to lab 2,
+this will consist of analyzing pre-compiled executables and devising
+appropriate inputs. Outcomes you will gain from this lab include:</p>
+<ul>
+<li>You will learn different ways that attackers can exploit security
+vulnerabilities when programs do not safeguard themselves well enough
+against buffer overflows.</li>
+<li>Through this, you will get a better understanding of how to write
+programs that are more secure, as well as some of the features provided
+by compilers and operating systems to make programs less
+vulnerable.</li>
+<li>You will gain a deeper understanding of the stack and
+parameter-passing mechanisms of x86-64 machine code.</li>
+<li>You will gain a deeper understanding of how x86-64 instructions are
+encoded.</li>
+<li>You will gain more experience with debugging tools such as
+<code>gdb</code> and <code>objdump</code>.</li>
+</ul>
+<div class="box alert_box">
+<div class="warning">
+
+</div>
+<p>In this lab, you will gain firsthand experience with methods used to
+exploit security weaknesses in operating systems and network servers.
+Our purpose is to help you learn about the runtime operation of programs
+and to understand the nature of these security weaknesses so that you
+can avoid them when you write system code. We do not condone the use of
+any other form of attack to gain unauthorized access to any system
+resources.</p>
+</div>
+<h2 id="logistics">Logistics</h2>
+<p>You will generate attacks (in the form of input strings) for target
+programs that are custom generated for you. They are generated on a
+Linux machine, so you will need to complete this lab on a Linux
+machine.</p>
+Your progress is automatically tracked like in lab 2, <strong>so there
+will not be anything you need to submit</strong>. Also like in lab 2,
+this automatic submission requires you be connected to the internet. You
+can run the target programs with a <code>-q</code> flag to prevent them
+from trying to contact the grading server if you are working offline, as
+in
+<div class="sourceCode">
+<pre class="sourcecode"><code>    ./ctarget -q</code></pre>
+</div>
+<p>You can obtain your files by pointing your Web browser at: <a
+href="http://awb66333.mathcs.carleton.edu:15513/"
+class="uri">http://awb66333.mathcs.carleton.edu:15513/</a></p>
+<p>The server will build your files and return them to your browser in a
+<code>tar</code> file called <code>targetK.tar</code>, where
+<code>K</code> is the unique number of your target programs.</p>
+<p><strong>Note:</strong> It takes a few seconds to build and download
+your target, so please be patient.</p>
+<p>Save the <code>targetK.tar</code> in a directory in which you plan to
+do your work (or upload it to <code>mantis</code>).<br />
+Then run this terminal command from that directory:
+<code>tar -xvf targetK.tar</code>. This will extract a directory
+<code>targetK</code> containing the files described below.</p>
+<p>You should only download one set of files. If for some reason you
+download multiple targets, choose one target to work on and delete the
+rest.</p>
+<p>The files in <code>targetK</code> include:</p>
+<ul>
+<li><code>README.txt</code>: A file describing the contents of the
+directory</li>
+<li><code>ctarget</code>: An executable program vulnerable to
+<em>code-injection</em> attacks</li>
+<li><code>ctarget.phaseN</code>: Empty files for your solutions to the
+<code>ctarget</code> phases</li>
+<li><code>rtarget</code>: An executable program vulnerable to
+<em>return-oriented-programming</em> attacks</li>
+<li><code>rtarget.phaseN</code>: Empty files for your solutions to the
+<code>rtarget</code> phases</li>
+<li><code>cookie.txt</code>: An 8-digit hex code that you will use as a
+unique identifier in your attacks.</li>
+<li><code>farm.c</code>: The source code of your target’s “gadget farm,”
+which you will use in generating return-oriented programming
+attacks.</li>
+<li><code>hex2raw</code>: A utility to generate attack strings.</li>
+</ul>
+<h2 id="target-programs">Target Programs</h2>
+<p>Both <code>ctarget</code> and <code>rtarget</code> read strings from
+standard input (the terminal). They do so with the function
+<code>getbuf</code> defined below:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">unsigned</span> getbuf<span class="op">()</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> buf<span class="op">[</span>BUFFER_SIZE<span class="op">];</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    Gets<span class="op">(</span>buf<span class="op">);</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>The function <code>Gets</code> is similar to the standard library
+function <code>gets</code>—it reads a string from standard input
+(terminated by <code>'\n'</code> or end-of-file) and stores it (along
+with a null terminator) at the specified destination. In this code, you
+can see that the destination is an array <code>buf</code>, declared as
+having <code>BUFFER_SIZE</code> bytes. At the time your targets were
+generated, <code>BUFFER_SIZE</code> was a compile-time constant specific
+to your version of the programs.</p>
+<p>Functions <code>Gets()</code> and <code>gets()</code> have no way to
+determine whether their destination buffers are large enough to store
+the string they read. They simply copy sequences of bytes, possibly
+overrunning the bounds of the storage allocated at the destinations.</p>
+<p>If the string typed by the user and read by <code>getbuf</code> is
+sufficiently short, it is clear that <code>getbuf</code> will return 1.
+Typically an error occurs if you input a long string.</p>
+<p>Program <code>rtarget</code> will have the same behavior. Overrunning
+the buffer typically causes the program state to be corrupted, leading
+to a memory access error (i.e., a segmentation fault).<br />
+Your task is to be more clever with the strings you feed
+<code>ctarget</code> and <code>rtarget</code> so that they do more
+interesting things. These are called <em>exploit</em> strings.</p>
+<p>Both <code>ctarget</code> and <code>rtarget</code> take several
+different command line arguments:</p>
+<ul>
+<li><code>-h</code>: Print list of possible command line arguments</li>
+<li><code>-q</code>: Don’t send results to the grading server (for
+working offline)</li>
+<li><code>-i FILE</code>: Supply input from a file, rather than from the
+terminal</li>
+</ul>
+<p>Your exploit strings will typically contain byte values that do not
+correspond to the ASCII values for printing characters. The program
+<code>hex2raw</code> will enable you to generate these <em>raw</em>
+strings. See <a href="#using-hex2raw">Using <code>hex2raw</code></a> for
+more information on how to use <code>hex2raw</code>.</p>
+<h3 id="important-points-about-input">Important Points About Input</h3>
+<p>Your exploit string must not contain byte value <code>0x0a</code> at
+any intermediate position, since this is the ASCII code for newline
+(<code>'\n'</code>). When <code>Gets</code> encounters this byte, it
+will assume you intended to terminate the string.</p>
+<p><code>hex2raw</code> expects two-digit hex values separated by one or
+more white spaces. So if you want to create a byte with a hex value of
+0, you need to write it as <code>00</code>. To create the input
+<code>0xdeadbeef</code> you should pass <code>ef be ad de</code> to
+<code>hex2raw</code> (note the reversal required for little-endian byte
+ordering).</p>
+<h2 id="part-i-code-injection-attacks">Part I: Code Injection
+Attacks</h2>
+<p>For the first three phases, your exploit strings will attack
+<code>ctarget</code>. This program is set up in a way that the stack
+positions will be consistent from one run to the next and so that data
+on the stack can be treated as executable code. These features make the
+program vulnerable to attacks where the exploit strings contain the byte
+encodings of executable code.</p>
+<h3 id="phase-1">Phase 1</h3>
+<p>For phase 1, you will not inject new code. Instead, your exploit
+string will redirect the program to execute an existing procedure</p>
+<p>Function <code>getbuf</code> is called within <code>ctarget</code> by
+a function <code>test</code> having the following C code:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> test<span class="op">()</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> val<span class="op">;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    val <span class="op">=</span> getbuf<span class="op">();</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;No exploit.  Getbuf returned 0x%x</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> val<span class="op">);</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>When <code>getbuf</code> executes its return statement (line 5 of
+<code>getbuf</code>), the program ordinarily resumes execution within
+function <code>test</code> (at line 5 of this function). We want to
+change this behavior. Within the file <code>ctarget</code>, there is
+code for a function <code>touch1</code> having the following C
+representation:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> touch1<span class="op">()</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    vlevel <span class="op">=</span> <span class="dv">1</span><span class="op">;</span> <span class="co">/* Part of validation protocol */</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;Touch1!: You called touch1()</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    validate<span class="op">(</span><span class="dv">1</span><span class="op">);</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    exit<span class="op">(</span><span class="dv">0</span><span class="op">);</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Your task is to get <code>ctarget</code> to execute the code for
+<code>touch1</code> when <code>getbuf</code> executes its return
+statement, rather than returning to <code>test</code>. Note that your
+exploit string may also corrupt parts of the stack not directly related
+to this stage, but this will not cause a problem, since
+<code>touch1</code> causes the program to exit directly.</p>
+<h4 id="advice">Advice:</h4>
+<ul>
+<li><p>All the information you need to devise your exploit string for
+this level can be determined by examining a disassembled version of
+<code>ctarget</code>. Use <code>objdump -d ctarget</code> to get this
+dissembled version.</p></li>
+<li><p>The idea is to position a byte representation of the starting
+address for <code>touch1</code> so that the <code>ret</code> instruction
+at the end of the code for <code>getbuf</code> will transfer control to
+<code>touch1</code>.</p></li>
+<li><p>Be careful about byte ordering.</p></li>
+<li><p>You might want to use <code>gdb</code> to step the program
+through the last few instructions of <code>getbuf</code> to make sure it
+is doing the right thing.</p></li>
+<li><p>The placement of <code>buf</code> within the stack frame for
+<code>getbuf</code> depends on the value of compile-time constant
+<code>BUFFER_SIZE</code>, as well the stack allocation strategy used by
+<code>gcc</code>. You will need to examine the disassembled code to
+determine its position.</p></li>
+</ul>
+<h3 id="phase-2">Phase 2</h3>
+<p>Phase 2 involves injecting a small amount of code as part of your
+exploit string.</p>
+<p>Within the file <code>ctarget</code> there is code for a function
+<code>touch2</code> having the following C representation:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> touch2<span class="op">(</span><span class="dt">unsigned</span> val<span class="op">)</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    vlevel <span class="op">=</span> <span class="dv">2</span><span class="op">;</span> <span class="co">/* Part of validation protocol */</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>val <span class="op">==</span> cookie<span class="op">)</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        printf<span class="op">(</span><span class="st">&quot;Touch2!: You called touch2(0x%.8x)</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> val<span class="op">);</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        validate<span class="op">(</span><span class="dv">2</span><span class="op">);</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        printf<span class="op">(</span><span class="st">&quot;Misfire: You called touch2(0x%.8x)</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> val<span class="op">);</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        fail<span class="op">(</span><span class="dv">2</span><span class="op">);</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    exit<span class="op">(</span><span class="dv">0</span><span class="op">);</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Your task is to get <code>ctarget</code> to execute the code for
+<code>touch2</code> rather than returning to <code>test</code>. In this
+case, however, you must make it appear to <code>touch2</code> as if you
+have passed your cookie as its argument.</p>
+<h4 id="advice-1">Advice</h4>
+<ul>
+<li><p>You will want to position a byte representation of the address of
+your injected code in such a way that <code>ret</code> instruction at
+the end of the code for <code>getbuf</code> will transfer control to
+it.</p></li>
+<li><p>Recall that the first argument to a function is passed in
+register <code>%rdi</code>.</p></li>
+<li><p>Your injected code should set the register to your cookie, and
+then use a <code>ret</code> instruction to transfer control to the first
+instruction in <code>touch2</code>.</p></li>
+<li><p>Do not attempt to use <code>jmp</code> or <code>call</code>
+instructions in your exploit code. The encodings of destination
+addresses for these instructions are difficult to formulate. Use
+<code>ret</code> instructions for all transfers of control, even when
+you are not returning from a call.</p></li>
+<li><p>See the discussion in <a href="#generating-byte-codes">Generating
+Byte Codes</a> on how to use tools to generate the byte-level
+representations of instruction sequences.</p></li>
+</ul>
+<h3 id="phase-3">Phase 3</h3>
+<p>Phase 3 also involves a code injection attack, but passing a string
+as argument.</p>
+<p>Within the file <code>ctarget</code> there is code for functions
+<code>hexmatch</code> and <code>touch3</code> having the following C
+representations:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* Compare string to hex represention of unsigned value */</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> hexmatch<span class="op">(</span><span class="dt">unsigned</span> val<span class="op">,</span> <span class="dt">char</span> <span class="op">*</span>sval<span class="op">)</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> cbuf<span class="op">[</span><span class="dv">110</span><span class="op">];</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* Make position of check string unpredictable */</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> <span class="op">*</span>s <span class="op">=</span> cbuf <span class="op">+</span> random<span class="op">()</span> <span class="op">%</span> <span class="dv">100</span><span class="op">;</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    sprintf<span class="op">(</span>s<span class="op">,</span> <span class="st">&quot;%.8x&quot;</span><span class="op">,</span> val<span class="op">);</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> strncmp<span class="op">(</span>sval<span class="op">,</span> s<span class="op">,</span> <span class="dv">9</span><span class="op">)</span> <span class="op">==</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> touch3<span class="op">(</span><span class="dt">char</span> <span class="op">*</span>sval<span class="op">)</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    vlevel <span class="op">=</span> <span class="dv">3</span><span class="op">;</span> <span class="co">/* Part of validation protocol */</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>hexmatch<span class="op">(</span>cookie<span class="op">,</span> sval<span class="op">))</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>        printf<span class="op">(</span><span class="st">&quot;Touch3!: You called touch3(</span><span class="sc">\&quot;</span><span class="st">%s</span><span class="sc">\&quot;</span><span class="st">)</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> sval<span class="op">);</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>        validate<span class="op">(</span><span class="dv">3</span><span class="op">);</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>        printf<span class="op">(</span><span class="st">&quot;Misfire: You called touch3(</span><span class="sc">\&quot;</span><span class="st">%s</span><span class="sc">\&quot;</span><span class="st">)</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> sval<span class="op">);</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>        fail<span class="op">(</span><span class="dv">3</span><span class="op">);</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    exit<span class="op">(</span><span class="dv">0</span><span class="op">);</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Your task is to get <code>ctarget</code> to execute the code for
+<code>touch3</code> rather than returning to <code>test</code>. You must
+make it appear to <code>touch3</code> as if you have passed a string
+representation of your cookie as its argument.</p>
+<h4 id="advice-2">Advice</h4>
+<ul>
+<li><p>You will need to include a string representation of your cookie
+in your exploit string. The string should consist of the eight
+hexadecimal digits (ordered from most to least significant) without a
+leading “<code>0x</code>.”</p></li>
+<li><p>Recall that a string is represented in C as a sequence of bytes
+followed by a byte with value 0. Type <code>man ascii</code> on any
+Linux machine to see the byte representations of the characters you
+need.</p></li>
+<li><p>Your injected code should set register <code>%rdi</code> to the
+address of this string.</p></li>
+<li><p>When functions <code>hexmatch</code> and <code>strncmp</code> are
+called, they push data onto the stack, overwriting portions of memory
+that held the buffer used by <code>getbuf</code>. As a result, you will
+need to be careful where you place the string representation of your
+cookie.</p></li>
+</ul>
+<h2 id="part-ii-return-oriented-programming">Part II: Return-Oriented
+Programming</h2>
+<p>Performing code-injection attacks on program <code>rtarget</code> is
+much more difficult than it is for <code>ctarget</code>, because it uses
+two techniques to thwart such attacks:</p>
+<ul>
+<li>It uses randomization so that the stack positions differ from one
+run to another. This makes it impossible to determine where your
+injected code will be located.</li>
+<li>It marks the section of memory holding the stack as nonexecutable,
+so even if you could set the program counter to the start of your
+injected code, the program would fail with a segmentation fault.</li>
+</ul>
+<p>Fortunately for you (though unfortunately in general), clever people
+have devised strategies for getting useful things done in a program by
+executing existing code, rather than injecting new code. The most
+general form of this is referred to as <em>return-oriented
+programming</em> (ROP)<a href="#fn2" class="footnote-ref" id="fnref2"
+role="doc-noteref"><sup>2</sup></a>. The strategy with ROP is to
+identify byte sequences within an existing program that consist of one
+or more instructions followed by the instruction <code>ret</code>. Such
+a segment is referred to as a <em>gadget</em>. The figure below
+illustrates how the stack can be set up to execute a sequence of <span
+class="math inline"><em>n</em></span> gadgets. In this figure, the stack
+contains a sequence of gadget addresses. Each gadget consists of a
+series of instruction bytes, with the final one being <code>0xc3</code>,
+encoding the <code>ret</code> instruction. When the program executes a
+<code>ret</code> instruction starting with this configuration, it will
+initiate a chain of gadget executions, with the <code>ret</code>
+instruction at the end of each gadget causing the program to jump to the
+beginning of the next.</p>
+<figure>
+<img src="rop.png" width="800"
+alt="Setting up sequence of gadgets for execution. Byte value 0xc3 encodes the ret instruction." />
+<figcaption aria-hidden="true"><em>Setting up sequence of gadgets for
+execution. Byte value <code>0xc3</code> encodes the <code>ret</code>
+instruction.</em></figcaption>
+</figure>
+<p>A gadget can make use of code corresponding to assembly-language
+statements generated by the compiler, especially ones at the ends of
+functions. In practice, there may be some useful gadgets of this form,
+but not enough to implement many important operations. For example, it
+is highly unlikely that a compiled function would have
+<code>popq %rdi</code> as its last instruction before <code>ret</code>.
+Fortunately, with a byte-oriented instruction set, such as x86-64, a
+gadget can often be found by extracting patterns from other parts of the
+instruction byte sequence.</p>
+<p>For example, one version of <code>rtarget</code> contains code
+generated for the following C function:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> setval_210<span class="op">(</span><span class="dt">unsigned</span> <span class="op">*</span>p<span class="op">)</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span>p <span class="op">=</span> <span class="dv">3347663060</span><span class="bu">U</span><span class="op">;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>The chances of this function being useful for attacking a system seem
+pretty slim. But, the disassembled machine code for this function shows
+an interesting byte sequence:</p>
+<div class="sourceCode">
+<pre class="sourcecode"><code>0000000000400f15 &lt;setval_210&gt;:
+  400f15:	c7 07 d4 48 89 c7    	movl   $0xc78948d4,(%rdi)
+  400f1b:	c3                   	retq   
+</code></pre>
+</div>
+<p>The byte sequence <code>48 89 c7</code> encodes the instruction
+<code>movq %rax, %rdi</code>. (See the tables below for the encodings of
+useful <code>movq</code> instructions.) This sequence is followed by
+byte value <code>c3</code>, which encodes the <code>ret</code>
+instruction. The function starts at address <code>0x400f15</code>, and
+the sequence starts on the fourth byte of the function. Thus, this code
+contains a gadget, having a starting address of <code>0x400f18</code>,
+that will copy the 64-bit value in register <code>%rax</code> to
+register <code>%rdi</code>.</p>
+<p>Your code for <code>rtarget</code> contains a number of functions
+similar to the <code>setval_210</code> function shown above in a region
+we refer to as the <em>gadget farm</em>. Your job will be to identify
+useful gadgets in the gadget farm and use these to perform attacks
+similar to those you did in Phases 2 and 3.</p>
+<p><strong>Important:</strong> The gadget farm is demarcated by
+functions <code>start_farm</code> and <code>end_farm</code> in your copy
+of <code>rtarget</code>. Do not attempt to construct gadgets from other
+portions of the program code.</p>
+<figure>
+<img src="movq.png" style="width:100.0%"
+alt="Encodings of movq instructions." />
+<figcaption aria-hidden="true"><em>Encodings of <code>movq</code>
+instructions.</em></figcaption>
+</figure>
+<figure>
+<img src="popq.png" style="width:75.0%"
+alt="Encodings of popq instructions." />
+<figcaption aria-hidden="true"><em>Encodings of <code>popq</code>
+instructions.</em></figcaption>
+</figure>
+<figure>
+<img src="movl.png" style="width:85.0%"
+alt="Encodings of movl instructions." />
+<figcaption aria-hidden="true"><em>Encodings of <code>movl</code>
+instructions.</em></figcaption>
+</figure>
+<figure>
+<img src="nopb.png" style="width:50.0%"
+alt="Encodings of 2-byte “no-operation” (no-op) instructions that functionally have no effect when executed." />
+<figcaption aria-hidden="true"><em>Encodings of 2-byte “no-operation”
+(no-op) instructions that functionally have no effect when
+executed.</em></figcaption>
+</figure>
+<h3 id="phase-4">Phase 4</h3>
+<p>For Phase 4, you will repeat the attack of <a href="#phase-2">Phase
+2</a>, but do so on program <code>rtarget</code> using gadgets from your
+gadget farm. You can construct your solution using gadgets consisting of
+the following instruction types, and using only the first eight x86-64
+registers (<code>%rax</code>–<code>%rdi</code>).</p>
+<ul>
+<li><code>movq</code>: The codes for these are shown in the first table
+above.</li>
+<li><code>popq</code>: The codes for these are shown in the second table
+above.</li>
+<li><code>ret</code>: This instruction is encoded by the single byte
+<code>0xc3</code>.</li>
+<li><code>nop</code>: This instruction (pronounced “no op,” which is
+short for “no operation”) is encoded by the single byte
+<code>0x90</code>. Its only effect is to cause the instruction pointer
+to be incremented by 1.</li>
+</ul>
+<h4 id="advice-3">Advice</h4>
+<ul>
+<li>All the gadgets you need can be found in the region of the code for
+<code>rtarget</code> demarcated by the functions <code>start_farm</code>
+and <code>mid_farm</code>.</li>
+<li>You can do this attack with just two gadgets.</li>
+<li>When a gadget uses a <code>popq</code> instruction, it will pop data
+from the stack. As a result, your exploit string will contain a
+combination of gadget addresses and data.</li>
+</ul>
+<h3 id="phase-5">Phase 5</h3>
+<p>Before you take on the Phase 5, pause to consider what you have
+accomplished so far. In Phases 2 and 3, you caused a program to execute
+machine code of your own design. If <code>ctarget</code> had been a
+network server, you could have injected your own code into a distant
+machine. In Phase 4, you circumvented two of the main devices modern
+systems use to thwart buffer overflow attacks. Although you did not
+inject your own code, you were able inject a type of program that
+operates by stitching together sequences of existing code. You have also
+gotten 58/60 points for the lab (assuming you made a check-in
+post).<br />
+That’s a very good score. If you have other pressing obligations
+consider stopping right now.</p>
+<p>Phase 5 requires you to do an ROP attack on <code>rtarget</code> to
+invoke function <code>touch3</code> with a pointer to a string
+representation of your cookie. The 2 points it is worth are not a true
+measure of the effort it will likely require. Think of it as more an
+extra credit problem for those who want to go beyond the normal
+expectations for the course.</p>
+<p>To solve Phase 5, you can use gadgets in the region of the code in
+<code>rtarget</code> demarcated by functions <code>start_farm</code> and
+<code>end_farm</code>. In addition to the gadgets used in Phase 4, this
+expanded farm includes the encodings of different <code>movl</code>
+instructions, as shown in the third table above. The byte sequences in
+this part of the farm also contain 2-byte instructions that serve as
+<em>functional no-ops</em>, i.e., they do not change any register or
+memory values. These include instructions, shown in the fourth table,
+such as <code>andb %al,%al</code>, that operate on the low-order bytes
+of some of the registers but do not change their values. There’s also a
+function that may be useful in its entirety.</p>
+<h4 id="advice-4">Advice</h4>
+<ul>
+<li>You’ll want to review the effect a <code>movl</code> instruction has
+on the upper 4 bytes of a register, as is described on page 183 of the
+textbook.</li>
+<li>The official solution requires eight gadgets (not all of which are
+unique).</li>
+</ul>
+<h2 id="using-hex2raw">Using <code>hex2raw</code></h2>
+<p><code>hex2raw</code> takes as input a <em>hex-formatted</em> string.
+In this format, each byte value is represented by two hex digits. For
+example, the string <code>012345</code> could be entered in hex format
+as <code>30 31 32 33 34 35 00</code>. (Recall that the ASCII code for
+decimal digit <code>X</code> is <code>0x3X</code>, and that the end of a
+string is indicated by a null byte.)</p>
+<p>The hex characters you pass to <code>hex2raw</code> should be
+separated by whitespace (blanks or newlines). We recommend separating
+different parts of your exploit string with newlines while you’re
+working on it. <code>hex2raw</code> supports C-style block comments, so
+you can mark off sections of your exploit string. For example:</p>
+<div class="sourceCode">
+<pre class="sourcecode"><code>48 c7 c1 f0 11 40 00 /* mov    $0x40011f0,%rcx */</code></pre>
+</div>
+<p>Be sure to leave space around both the starting and ending comment
+strings (<code>/*</code>, <code>*/</code>), so that the comments will be
+properly ignored.</p>
+<p>If you generate a hex-formatted exploit string in the file
+<code>ctarget.phase1</code>, you can apply the raw string to
+<code>ctarget</code> in several different ways:</p>
+<ul>
+<li>You can set up a series of pipes to pass the string through
+<code>hex2raw</code>.
+<div class="sourceCode">
+<pre class="sourcecode"><code>    cat ctarget.phase1 | ./hex2raw | ./ctarget</code></pre>
+</div></li>
+<li>You can store the raw string in a file and use I/O redirection:
+<div class="sourceCode">
+<pre class="sourcecode"><code>    ./hex2raw &lt; ctarget.phase1 &gt; ctarget.phase1.raw
+    ./ctarget &lt; ctarget.phase1.raw</code></pre>
+</div>
+This approach can also be used when running from within
+<code>gdb</code>:
+<div class="sourceCode">
+<pre class="sourcecode"><code>    gdb ctarget
+    (gdb) run &lt; ctarget.phase1.raw</code></pre>
+</div></li>
+<li>You can store the raw string in a file and provide the file name as
+a command-line argument:
+<div class="sourceCode">
+<pre class="sourcecode"><code>    ./hex2raw &lt; ctarget.phase1 &gt; ctarget.phase1.raw
+    ./ctarget -i ctarget.phase1.raw</code></pre>
+</div>
+This approach also can be used when running from within
+<code>gdb</code>.</li>
+</ul>
+<h2 id="generating-byte-codes">Generating Byte Codes</h2>
+<p>Using <code>gcc</code> as an assembler and <code>objdump</code> as a
+disassembler makes it convenient to generate the byte codes for
+instruction sequences. For example, suppose you write a file
+<code>example.s</code> containing the following assembly code:</p>
+<div class="sourceCode">
+<pre class="sourcecode"><code># Example of hand-generated assembly code
+pushq   $0xabcdef          # Push value onto stack
+addq    $17,%rax           # Add 17 to %rax
+movl    %eax,%edx          # Copy lower 32 bits to %edx
+</code></pre>
+</div>
+<p>The code can contain a mixture of instructions and data. Anything to
+the right of a <code>#</code> character is a comment.</p>
+You can now assemble and disassemble this file:
+<div class="sourceCode">
+<pre class="sourcecode"><code>    gcc -c example.s
+    objdump -d example.o &gt; example.d</code></pre>
+</div>
+The generated file <code>example.d</code> contains the following:
+<div class="sourceCode">
+<pre class="sourcecode"><code>
+example.o:     file format elf64-x86-64
+
+
+Disassembly of section .text:
+
+0000000000000000 &lt;.text&gt;:
+   0:	68 ef cd ab 00       	pushq  $0xabcdef
+   5:	48 83 c0 11          	add    $0x11,%rax
+   9:	89 c2                	mov    %eax,%edx
+</code></pre>
+</div>
+<p>The lines at the bottom show the machine code generated from the
+assembly language instructions. Each line has a hexadecimal number on
+the left indicating the instruction’s starting address (starting with
+0), while the hex digits after the <code>:</code> character indicate the
+byte codes for the instruction. Thus, we can see that the instruction
+<code>push 0xABCDEF</code> has hex-formatted byte code
+<code>68 ef cd ab 00</code>.</p>
+From this file, you can get the byte sequence for the code:
+<div class="sourceCode">
+<pre class="sourcecode"><code>68 ef cd ab 00 48 83 c0 11 89 c2 
+</code></pre>
+</div>
+This string can then be passed through <code>hex2raw</code> to generate
+an input string for the target programs. Alternatively, you can edit
+<code>example.d</code> to omit extraneous values and to contain C-style
+comments for readability, yielding:
+<div class="sourceCode">
+<pre class="sourcecode"><code>   68 ef cd ab 00   /* pushq  $0xabcdef  */
+   48 83 c0 11      /* add    $0x11,%rax */
+   89 c2            /* mov    %eax,%edx  */
+</code></pre>
+</div>
+<p>This is also a valid input you can pass through <code>hex2raw</code>
+before sending to one of the target programs.</p>
+<h2 id="grading">Grading</h2>
+<p>This lab is graded out of 60 points, with 57 from the various phases
+as shown below and 3 from the check-in post.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Phase</th>
+<th>Program</th>
+<th>Method</th>
+<th>Function</th>
+<th>Points</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td><code>ctarget</code></td>
+<td>Code injection</td>
+<td><code>touch1</code></td>
+<td>21</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td><code>ctarget</code></td>
+<td>Code injection</td>
+<td><code>touch2</code></td>
+<td>21</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td><code>ctarget</code></td>
+<td>Code injection</td>
+<td><code>touch3</code></td>
+<td>9</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td><code>rtarget</code></td>
+<td>Return-oriented programming</td>
+<td><code>touch2</code></td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td><code>rtarget</code></td>
+<td>Return-oriented programming</td>
+<td><code>touch3</code></td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p>When you have correctly solved one of the phases, your target program
+will indicate this. For example:</p>
+<div class="sourceCode">
+<pre class="sourcecode"><code>    cat ctarget.phase2 | ./hex2raw | ./ctarget
+    Cookie: 0x1a7dd803
+    Type string:Touch2!: You called touch2(0x1a7dd803)
+    Valid solution for level 2 with target ctarget
+    PASS: Sent exploit string to server to be validated.
+    NICE JOB!</code></pre>
+</div>
+<p>The server will test your exploit string to make sure it really
+works, and it will update the lab progress page indicating that your
+target has completed this phase.</p>
+<p>You can view the progress page by pointing your Web browser at <a
+href="http://awb66333.mathcs.carleton.edu:15513/progress"
+class="uri">http://awb66333.mathcs.carleton.edu:15513/progress</a></p>
+<p>There is no penalty for making mistakes in this lab. Feel free to
+fire away at <code>ctarget</code> and <code>rtarget</code> with any
+strings you like.</p>
+<section class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>This lab is adapted from the Attack
+Lab developed for <em>Computer Systems: A Programmer’s Perspective</em>
+by <a href="http://www.cs.cmu.edu/~bryant">Randal E. Bryant</a> and <a
+href="http://www.cs.cmu.edu/~droh">David R. O’Hallaron</a>, Carnegie
+Mellon University, available <a
+href="http://csapp.cs.cmu.edu/3e/labs.html">here</a>.<a href="#fnref1"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><ul>
+<li>Roemer, R., Buchanan, E., Shacham, H., &amp; Savage, S. (2012).
+<em>Return-oriented programming: Systems, languages, and
+applications</em>. ACM Transactions on Information and System Security
+(TISSEC), 15(1), 1-34</li>
+<li>Schwartz, E. J., Avgerinos, T., &amp; Brumley, D. (2011). <em>Q:
+Exploit hardening made easy</em>. In 20th USENIX Security Symposium
+(USENIX Security 11).</li>
+</ul>
+<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></li>
+</ol>
+</section>
+</body>
+</html>

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Aaron Bauer" />
+  <meta name="dcterms.date" content="2022-05-18" />
+  <title>Lab 5: Proxy lab</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        background-color: #fffcf5;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {  background-color: #fffcf5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ef2929; background-color: #fffcf5; } /* Alert */
+    code span.an { color: #8f5902; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #c4a000; background-color: #fffcf5; } /* Attribute */
+    code span.bn { color: #0000cf; background-color: #fffcf5; } /* BaseN */
+    code span.cf { color: #006fe0; background-color: #fffcf5; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #d0372d; background-color: #fffcf5; } /* Char */
+    code span.cn { color: #d0372d; background-color: #fffcf5; } /* Constant */
+    code span.co { color: #8d8d84; background-color: #fffcf5; } /* Comment */
+    code span.cv { color: #8d8d84; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #8d8d84; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Documentation */
+    code span.dt { color: #6434a3; background-color: #fffcf5; } /* DataType */
+    code span.dv { color: #0000cf; background-color: #fffcf5; } /* DecVal */
+    code span.er { color: #a40000; background-color: #fffcf5; font-weight: bold; } /* Error */
+    code span.ex { background-color: #fffcf5; } /* Extension */
+    code span.fl { color: #d0372d; background-color: #fffcf5; } /* Float */
+    code span.fu { color: #006699; background-color: #fffcf5; } /* Function */
+    code span.im { background-color: #fffcf5; } /* Import */
+    code span.in { color: #8f5902; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #0000ff; background-color: #fffcf5; font-weight: bold; } /* Keyword */
+    code span.op { color: #006fe0; background-color: #fffcf5; font-weight: bold; } /* Operator */
+    code span.ot { color: #8f5902; background-color: #fffcf5; } /* Other */
+    code span.pp { color: #808080; background-color: #fffcf5; font-style: italic; } /* Preprocessor */
+    code span.sc { color: #000000; background-color: #fffcf5; } /* SpecialChar */
+    code span.ss { color: #4e9a06; background-color: #fffcf5; } /* SpecialString */
+    code span.st { color: #008000; background-color: #fffcf5; } /* String */
+    code span.va { color: #ba36a5; background-color: #fffcf5; } /* Variable */
+    code span.vs { color: #4e9a06; background-color: #fffcf5; } /* VerbatimString */
+    code span.wa { color: #8f5902; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="lab-style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
+  <link rel="manifest" href="./site.webmanifest">
+
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Lab 5: Proxy lab</h1>
+<p class="author">Aaron Bauer</p>
+<p class="date">May 18, 2022</p>
+</header>
+<div class="wrapper">
+<h1 id="lab-5-concurrent-caching-web-proxy1">Lab 5: Concurrent Caching Web Proxy<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></h1>
+<ul>
+<li><strong>Assigned:</strong> Friday, May 20</li>
+<li><strong>Check-in Post:</strong> Before 9pm Friday, May 27 (<a href="https://moodle.carleton.edu/mod/forum/view.php?id=743578">check-in forum</a>)</li>
+<li><strong>Due:</strong> 9pm Wednesday, June 1 (<strong>No late days can be used on this lab</strong>)</li>
+<li><strong>Collaboration:</strong> This assignment can be done with a partner or individually (I will assume same as lab 4 unless you tell me otherwise)</li>
+<li><strong>Handout:</strong> <a href="lab5-handout.tar">lab5-handout.tar</a></li>
+<li><strong>Submit:</strong> Upload your <code>proxy.c</code> file and any files related to your test cases to <a href="https://moodle.carleton.edu/mod/assign/view.php?id=743562">Lab 5</a> on Moodle</li>
+<li><strong>References:</strong>
+<ul>
+<li><a href="../notes/system-io.html">System-Level I/O</a></li>
+<li><a href="../notes/networking.html">Network Programming</a></li>
+<li><a href="../notes/concurrency.html">Concurrent Programming</a></li>
+<li>CSPP 10.5 (RIO functions for network I/O)</li>
+<li>CSPP 11.6 (Tiny web server)</li>
+<li><a href="../style-guide.html">208 Style Guide</a></li>
+</ul></li>
+</ul>
+<h2 id="introduction">Introduction</h2>
+<p>A Web proxy is a program that acts as a middleman between a Web browser and an <em>end server</em>. Instead of contacting the end server directly to get a Web page, the browser contacts the proxy, which forwards the request on to the end server. When the end server replies to the proxy, the proxy sends the reply on to the browser.</p>
+<p>Proxies are useful for many purposes. Sometimes proxies are used in firewalls, so that browsers behind a firewall can only contact a server beyond the firewall via the proxy. Proxies can also act as anonymizers: by stripping requests of all identifying information, a proxy can make the browser anonymous to Web servers. Proxies can even be used to cache web objects by storing local copies of objects from servers then responding to future requests by reading them out of its cache rather than by communicating again with remote servers.</p>
+<p>In this lab, you will write a simple HTTP proxy that caches web objects. For the first part of the lab, you will set up the proxy to accept incoming connections, read and parse requests, forward requests to web servers, read the servers’ responses, and forward those responses to the corresponding clients. This first part will involve learning about basic HTTP operation and how to use sockets to write programs that communicate over network connections. In the second part, you will upgrade your proxy to deal with multiple concurrent connections. This will introduce you to dealing with concurrency, a crucial systems concept. In the third part, you will add caching to your proxy using a simple main memory cache of recently accessed web content. Finally, you will implement additional test cases to test aspects of your proxy not covered by the autograder.</p>
+<h2 id="logistics">Logistics</h2>
+You can download the files you need for this lab with
+<div class="sourceCode">
+<pre class="sourcecode"><code>    wget http://cs.carleton.edu/faculty/awb/cs208/s22/handouts/lab5-handout.tar</code></pre>
+</div>
+Then run the command
+<div class="sourceCode">
+<pre class="sourcecode"><code>    tar xvf lab5-handout.tar</code></pre>
+</div>
+<p>This will generate a handout directory called <code>lab5-handout</code>. The <code>README</code> file describes the various files.</p>
+<p><code>proxy.c</code> contains starter code and comments for Parts I-III described below. This starter code is simply guidance and not a requirement—you are free to modify and/or ignore it in any way you wish.</p>
+<h2 id="part-i-implementing-a-sequential-web-proxy">Part I: Implementing a sequential web proxy</h2>
+<p>The first step is implementing a basic sequential proxy that handles HTTP/1.0 GET requests. Other requests type, such as POST, are strictly optional. Implement the <code>handle_request</code> function in the provided starter code (and any helper functions you decide to add) to complete this part.</p>
+<p>When started, your proxy should listen for incoming connections on a port whose number will be specified on the command line. Once a connection is established, your proxy should read the entirety of the request from the client and parse the request. It should determine whether the client has sent a valid HTTP request; if so, it can then establish its own connection to the appropriate web server then request the object the client specified. Finally, your proxy should read the server’s response and forward it to the client.</p>
+<p>The starter code in <code>main</code> takes care of listening on the port passed in on the command line. When it receives a connection, it creates a new socket and passes the associated file descriptor to <code>handle_request</code>. Your code in <code>handle_request</code> should use the RIO functions to read the request from the client. For example, the Tiny server’s <code>doit</code> function uses the code below to initialize buffered reading on the socket file descriptor <code>fd</code> and read the first line from the client:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>rio_t rio;</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">/* Read request line and headers */</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>Rio_readinitb(&amp;rio, fd);</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (!Rio_readlineb(&amp;rio, buf, MAXLINE))  </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span>;</span></code></pre></div>
+<p>Note that RIO has functions for buffered reading (<code>Rio_readlineb</code>, <code>Rio_readnb</code>) and functions for unbuffered reading and writing (<code>Rio_readn</code>, <code>Rio_writen</code>). You should not interleave buffered and unbuffered calls on the same file descriptor as this will cause problems.</p>
+<p>Once you have read and parsed the first line of the request from the client, you will need to open a socket to the server. Use the provided <code>Open_clientfd</code> function for this. It takes two strings arguments, the hostname and the port, and returns a file descriptor.</p>
+<h3 id="http1.0-get-requests">HTTP/1.0 GET requests</h3>
+<p>When an end user enters a URL such as <code>http://www.carleton.edu/index.html</code> into the address bar of a web browser, the browser will send an HTTP request to the proxy that begins with a line that might resemble the following:</p>
+<div class="sourceCode">
+<pre class="sourcecode"><code>    GET http://www.carleton.edu/index.html HTTP/1.1</code></pre>
+</div>
+<p>In that case, the proxy should parse the request into the following fields: the hostname, <code>www.carleton.edu</code>; and the path or query and everything following it, <code>/index.html</code>. That way, the proxy can determine that it should open a connection to <code>www.carleton.edu</code> and send an HTTP request of its own starting with a line of the following form:</p>
+<div class="sourceCode">
+<pre class="sourcecode"><code>    GET /index.html HTTP/1.0</code></pre>
+</div>
+<p>Note that all lines in an HTTP request end with a carriage return, <code>'\r'</code>, followed by a newline, <code>'\n'</code>. Also important is that every HTTP request is terminated by an empty line: <code>"\r\n"</code>.</p>
+<p>You should notice in the above example that the web browser’s request line ends with <code>HTTP/1.1</code>, while the proxy’s request line ends with <code>HTTP/1.0</code>. Modern web browsers will generate HTTP/1.1 (or HTTP/2 or even HTTP/3) requests, but your proxy should handle them and forward them as HTTP/1.0 requests.</p>
+<p>If a browser sends any request headers as part of an HTTP request, your proxy should forward them unchanged.</p>
+<p>Remember that not all content on the web is ASCII text. Much of the content on the web is binary data, such as images and video. Ensure that you account for binary data when selecting and using functions for network I/O.</p>
+<h3 id="port-numbers">Port numbers</h3>
+<p>There are two significant classes of port numbers for this lab: HTTP request ports and your proxy’s listening port.</p>
+<p>The HTTP request port is an optional field in the URL of an HTTP request. That is, the URL may be of the form, <code>http://www.carleton.edu:8080/index.html</code>, in which case your proxy should connect to the host <code>www.carleton.edu</code> on port <code>8080</code> instead of the default HTTP port, which is port 80.<br />
+The provided <a href="#autograder">autograder</a> always supplies a port number with its requests.</p>
+<p>The listening port is the port on which your proxy should listen for incoming connections. Your proxy should accept a command line argument specifying the listening port number for your proxy. For example, with the following command, your proxy should listen for connections on port 15213:</p>
+<div class="sourceCode">
+<pre class="sourcecode"><code>    $ ./proxy 15213</code></pre>
+</div>
+<p>You may select any non-privileged listening port (greater than 1,024 and less than 65,536) as long as it is not used by other processes. Since each proxy must use a unique listening port and many people may be simultaneously working on <code>mantis</code>, the script <code>port-for-user.pl</code> is provided to help you pick your own personal port number. Use it to generate port number based on your user ID:</p>
+<div class="sourceCode">
+<pre class="sourcecode"><code>    $ ./port-for-user.pl awb
+    awb: 16362</code></pre>
+</div>
+<p>The port, <span class="math inline">\(p\)</span>, returned by <code>port-for-user.pl</code> is always an even number. So if you need an additional port number, say for the <code>Tiny server</code>, you can safely use ports <span class="math inline">\(p\)</span> and <span class="math inline">\(p+1\)</span>.</p>
+<p>Please don’t pick your own random port. If you do, you run the risk of interfering with another user.</p>
+<h3 id="string-parsing">String parsing</h3>
+<p>This part is essentially a string parsing problem—given a URL, extract the hostname, the path, and (potentially) a port. To help you devise your own approach to this, here are some of the tools available in C for string parsing:</p>
+<ul>
+<li><p><code>sscanf</code> is a good tool for extracting parts of a string when its structure is known. For example, line 60 of <code>tiny/tiny.c</code> uses <code>sscanf</code> to separate the request line consisting of the request method, the URL, and the HTTP version into separate variables:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>sscanf(buf, <span class="st">&quot;%s %s %s&quot;</span>, method, url, version); </span></code></pre></div>
+<p>This line will take the string in <code>buf</code> and copy the characters before the first space to <code>method</code>, copy the characters after the first space and before the second space to <code>url</code>, and copy the rest of <code>buf</code> to <code>version</code>. So <code>GET www.carleton.edu/index.html HTTP/1.1</code> would be split into <code>GET</code>, <code>www.carleton.edu/index.html</code>, and <code>HTTP/1.1</code>. <code>sscanf</code> is also helpful in dealing with a known prefix, such as <code>http://</code>. For example</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>sscanf(url, <span class="st">&quot;http://%s&quot;</span>, url_trim);</span></code></pre></div>
+<p>will extract the part of <code>url</code> after the <code>http://</code> and copy it to <code>url_trim</code>. Note that nothing will be copied to <code>url_trim</code> if <code>url</code> does not start with exactly <code>http://</code>. Recall that <code>sscanf</code> returns the number of items that were successfully matched.</p></li>
+<li><p><code>char *strchr(char *cs , char c)</code> returns a pointer to the first occurrence of character <code>c</code> in <code>cs</code>, or <code>NULL</code> if <code>c</code> is not present. For example, if <code>url</code> is <code>"www.carleton.edu/index.html"</code>,</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> *temp = strchr(url, <span class="ch">&#39;/&#39;</span>);</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>strncpy(filename, temp, <span class="dv">100</span>);</span></code></pre></div>
+<p>would set <code>temp</code> to point to the <code>'/'</code> character with <code>url</code>, and then copy from that point in <code>url</code> to the end (up to 100 characters) to <code>filename</code> (after which <code>filename</code> would point to <code>"/index.html"</code>). If you then did</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>*temp = <span class="ch">&#39;\0&#39;</span>;</span></code></pre></div>
+<p>to insert a null terminator, <code>url</code> would become <code>"www.carleton.edu"</code>.</p></li>
+<li><p><code>char *strstr(char *cs, char *ct)</code> returns a pointer to the first occurrence of string <code>ct</code> in <code>cs</code>, or <code>NULL</code> if <code>ct</code> is not present.</p></li>
+<li><p><code>char *strtok(char *s, char *ct)</code> searches <code>s</code> for tokens delimited by characters from <code>ct</code>. A sequence of calls of <code>strtok(s, ct)</code> splits <code>s</code> into tokens, each delimited by a character from <code>ct</code>. The first call in a sequence has a non-<code>NULL</code> <code>s</code>. It finds the first token in <code>s</code> consisting of characters not in <code>ct</code>; it terminates that by overwriting the next character of <code>s</code> with <code>'\0'</code> and returns a pointer to the token. Each subsequent call, indicated by a <code>NULL</code> value of <code>s</code>, returns the next such token, search from just path the end of the previous one. <code>strtok</code> returns <code>NULL</code> when no further token is found. The string <code>ct</code> may be different each call.</p></li>
+<li><p>Not parsing per se, but <code>sprintf</code> can be a nice way to assemble a string from multiple pieces of data in C. It works exactly like <code>printf</code>, except the result is copied to another string rather than printed. See the documentation <a href="https://www.cplusplus.com/reference/cstdio/sprintf/">here</a>.</p></li>
+</ul>
+<h2 id="part-ii-caching-web-objects">Part II: Caching web objects</h2>
+<p>For the next part of the lab, you will add a cache to your proxy that stores recently-used web objects in memory. Here a web object just means a file sent by a web server. HTTP actually defines a fairly complex model by which web servers can give instructions as to how the objects they serve should be cached and clients can specify how caches should be used on their behalf. However, your proxy will adopt a simplified approach.</p>
+<p>When your proxy receives a web object from a server, it should cache it in memory as it transmits the object to the client. If another client requests the same object from the same server, your proxy need not reconnect to the server; it can simply resend the cached object.</p>
+<p>The starter code in <code>proxy.c</code> provides struct definitions and a set of cache functions you can use to get started. Under that design, when the proxy receives a request, it should look up the URL in the cache, If an entry is found, the proxy should send the associated <code>item</code> to the client. If an entry isn’t found, when the proxy receives a response from the server, it would buffer that response in memory, and then insert an entry into the cache with the request’s URL as the <code>url</code> and the contents of the buffer as the <code>item</code>.</p>
+<h2 id="part-iii-dealing-with-multiple-concurrent-requests">Part III: Dealing with multiple concurrent requests</h2>
+<p>Once you have a working sequential caching proxy, you should alter it to simultaneously handle multiple requests. The simplest way to implement a concurrent server is to spawn a new thread to handle each new connection request, using the technique discussed in class. Other designs are also possible, such as the prethreaded server described in Section 12.5.5 of your textbook.</p>
+<p>Note that threads should run in detached mode to avoid memory leaks.</p>
+<h2 id="part-iv-breaking-things">Part IV: Breaking things</h2>
+<p>The provided <a href="#autograder">autograder</a> is very simple. It checks that the proxy can successfully serve several different files from the CSPP Tiny web server (Basic), that the proxy will serve a previously requested file even when the server it came from is no longer available (Cache), and that the proxy will service a second client even when the first hasn’t finished (Concurrency). These verify only fairly basic aspects of the functionality of each part. For example, the autograder does not test whether the proxy gracefully handles an invalid or malformed HTTP request. It’s important that a good, robust proxy not crash in this case, but instead send an appropriate response to the client and stop processing the request.</p>
+<p>For this part of the lab, you will devise additional test cases that go beyond the functionality checked by the autograder. Your goal will be to demonstrate test cases that expose flaws in a proxy server that would pass the provided autograder. A test case should consist of</p>
+<ul>
+<li>A piece of code to run, or a description of steps to follow, that test some functionality the autograder does not. This can be a shell script like the autograder (<code>driver.sh</code>), a C program, a Python program, a program in another language, or step-by-step instructions.</li>
+<li>A description of the problem your test case reveals. This can be in a separate file, or in comments.</li>
+<li>(For extra credit) A proxy server implementation that passes your test.</li>
+</ul>
+<p>This is by design a very open-ended task. Coming up with your own tests and perhaps even your own testing harness is a valuable skill in the real world, where exact operating conditions are rarely known and reference solutions are often unavailable. Test cases that are automated (like the autograder) will earn more credit. Step-by-step instructions should be sufficiently detailed that I can perform the test on a proxy and easily determine whether it passed or failed the test. Test cases should not rely on extra information being printed by the proxy.</p>
+<p>Below are some ideas to get you started:</p>
+<ul>
+<li>Valid HTTP requests not covered by the autograder (e.g., a request without a port in the URL)</li>
+<li>Invalid or malformed HTTP requests (i.e., a request that does not conform to the expected format due to missing or incorrect parts).</li>
+<li>As discussed in the Aside on page 964 of the CSPP text, a proxy should ignore <code>SIGPIPE</code> signals and should deal gracefully with <code>write</code> operations that return <code>EPIPE</code> errors.</li>
+<li>Sometimes, calling <code>read</code> to receive bytes from a socket that has been prematurely closed will cause <code>read</code> to return <code>-1</code> with <code>errno</code> set to <code>ECONNRESET</code>. A proxy should not terminate due to this error.</li>
+<li>A proxy should have a thread-safe cache, ensuring that cache access is free of race conditions. Be aware you may have to send many simultaneous requests to trigger a concurrency bug in your proxy’s cache. One solution would be to protecting accesses to the cache with one large exclusive lock. A more efficient solution would allow multiple threads to simultaneously read from the cache, while still allowing only one thread to write to the cache at a time. You may want to explore options such as partitioning the cache, using Pthreads readers-writers locks, or using semaphores to implement your own readers-writers solution.</li>
+<li>Obviously, if your proxy were to cache every object that is ever requested, it would require an unlimited amount of memory. Moreover, because some web objects are larger than others, it might be the case that one giant object will consume the entire cache, preventing other objects from being cached at all. To avoid those problems, your proxy should have both a maximum cache size and a maximum cache object size. When designing a test case for this issue, you can stipulate the proxy should enforce specific values for these limits, and design a test to verify that it does. This could include an eviction policy that approximates a least-recently-used (LRU) eviction policy. It doesn’t have to be strictly LRU, but it should be something reasonably close. Note that both reading an object and writing would count as using the object.</li>
+</ul>
+<h2 id="testing">Testing</h2>
+<h3 id="autograder">Autograder</h3>
+<p>Your handout materials include an autograder, called <code>driver.sh</code>, that will assign scores for <em>Basic Correctness</em>, <em>Concurrency</em>, and <em>Cache</em>. To run the autograder, run</p>
+<div class="sourceCode">
+<pre class="sourcecode"><code>    $ ./driver.sh</code></pre>
+</div>
+<p>from the lab5-handout directory. You must run the driver on a Linux machine.</p>
+<h3 id="tiny-web-server">Tiny web server</h3>
+<p>Your handout directory contains the source code for the CSPP Tiny web server in the <code>tiny</code> subdirectory. While not as powerful as <code>thttpd</code> (a small, open-source web server written in C), the CSPP Tiny web server will be easy for you to modify as you see fit. It’s also a reasonable starting point for your proxy code. And it’s the server that the autograder uses to fetch pages.</p>
+<p>A general pattern for testing might be to start the Tiny server in one terminal, start your proxy in another, and use <code>curl</code> (see below) to send a request to the Tiny server via your proxy. In VS Code, the little + in the upper right of the terminal section will open another terminal.</p>
+<h3 id="telnet"><code>telnet</code></h3>
+<p>As described in your textbook (11.5.3), you can use <code>telnet</code> to open a connection to your proxy and send it HTTP requests.</p>
+<h3 id="curl"><code>curl</code></h3>
+<p>You can use <code>curl</code> to generate HTTP requests to any server, including your own proxy. It is an extremely useful debugging tool. For example, if your proxy and Tiny are both running on the local machine, Tiny is listening on port 15213, and proxy is listening on port 15214, then you can request a page from Tiny via your proxy using the following <code>curl</code> command:</p>
+<div class="sourceCode">
+<pre class="sourcecode"><code>linux&gt; curl -v --proxy http://localhost:15214 http://localhost:15213/home.html
+* About to connect() to proxy localhost port 15214 (#0)
+*   Trying 127.0.0.1... connected
+* Connected to localhost (127.0.0.1) port 15214 (#0)
+&gt; GET http://localhost:15213/home.html HTTP/1.1
+&gt; User-Agent: curl/7.19.7 (x86_64-redhat-linux-gnu)...
+&gt; Host: localhost:15213
+&gt; Accept: */*
+&gt; Proxy-Connection: Keep-Alive
+&gt; 
+* HTTP 1.0, assume close after body
+&lt; HTTP/1.0 200 OK
+&lt; Server: Tiny Web Server
+&lt; Content-length: 120
+&lt; Content-type: text/html
+&lt; 
+&lt;html&gt;
+&lt;head&gt;&lt;title&gt;test&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt; 
+&lt;img align=&quot;middle&quot; src=&quot;godzilla.gif&quot;&gt;
+Dave O&#39;Hallaron
+&lt;/body&gt;
+&lt;/html&gt;
+* Closing connection #0</code></pre>
+</div>
+<h3 id="netcat"><code>netcat</code></h3>
+<p><code>netcat</code>, also known as <code>nc</code>, is a versatile network utility. You can use <code>netcat</code> just like <code>telnet</code>, to open connections to servers. In addition to being able to connect to Web servers, <code>netcat</code> can also operate as a server itself. With the following command, you can run <code>netcat</code> as a server listening on port 12345:</p>
+<div class="sourceCode">
+<pre class="sourcecode"><code>    $ nc -l 12345</code></pre>
+</div>
+<p>Once you have set up a <code>netcat</code> server, you can generate a request to a phony object on it through your proxy, and you will be able to inspect the exact request that your proxy sent to <code>netcat</code>.</p>
+<h2 id="grading">Grading</h2>
+<p>This assignment will be graded out of a total of 100 points:</p>
+<ul>
+<li><em>Basic Correctness</em>: 40 points for basic proxy operation (autograded).</li>
+<li><em>Concurrency</em>: 15 points for handling concurrent requests (autograded).</li>
+<li><em>Cache</em>: 15 points for a working cache (autograded).</li>
+<li><em>Test Cases</em>: up to 8 points for each test case (see below). This does not include potential extra credit for an implementation that passes the test. You can submit up to five test cases and score over 100 points, though each test case will need to target a different problem/feature.
+<ul>
+<li>A test case that is performed via manual step-by-step instructions: 2 points</li>
+<li>A test case that is executed automatically (e.g., via a script), but whose correctness must be checked manually (e.g., looking for particular output): 5 points</li>
+<li>A fully automatic test case (e.g., a script both performs the test and determines whether it passed or failed): 8 points</li>
+</ul></li>
+<li><em>Style</em>: 10 points for style. Style guidelines can be found <a href="http://cs.carleton.edu/faculty/awb/cs208/s22/style-guide.html">here</a>. These style points will include whether your proxy implementation correctly frees all allocated memory.</li>
+<li><em>Check-in Post</em>: 5 points.</li>
+</ul>
+<section class="footnotes" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>This lab is adapted from the Proxy Lab developed for <em>Computer Systems: A Programmer’s Perspective</em> by <a href="http://www.cs.cmu.edu/~bryant">Randal E. Bryant</a> and <a href="http://www.cs.cmu.edu/~droh">David R. O’Hallaron</a>, Carnegie Mellon University, available <a href="http://csapp.cs.cmu.edu/3e/labs.html">here</a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</body>
+</html>
